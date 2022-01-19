@@ -123,7 +123,7 @@ const Airdrop = ({ }) => {
 
                 <div>Note -
                     Current contract is only in it's beta stage and we will be observing community use and modify and release a new contract based on that. Make sure you only use the contract with our webpage and do not have a contract dependency on it. Developers hold the right to pause all of it's functionality at any point.</div>
-                <Text fontSize={'2xl'} >Enter Contract Address of NFT(ERC721)</Text>
+                <Text fontSize={'2xl'} >Enter Contract Address of NFT(HRC721)</Text>
                 <Input
                     value={formData.contractAddress}
                     onChange={(e) => handleChange("contractAddress", e.target.value)}

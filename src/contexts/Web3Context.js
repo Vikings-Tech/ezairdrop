@@ -11,17 +11,17 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 
 
-
-const RPC_URL = "https://api.s0.b.hmny.io";
-const CHAIN_ID = 1666700000;
-const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685"
-const OUR_ADDRESS = "0x37f0eE4b69D2958749C86e06A5b6F93436202E0E"
-// const RPC_URL = "https://api.harmony.one";
-// const CHAIN_ID = 1666600000;
+// TEST NET BYATCH
+// const RPC_URL = "https://api.s0.b.hmny.io";
+// const CHAIN_ID = 1666700000;
+// const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685"
+const OUR_ADDRESS = "0x7B5a9942d1a7e6F450EfD59ce4C42c6309B5591F"
+const RPC_URL = "https://api.harmony.one";
+const CHAIN_ID = 1666600000;
 const CHIBI_CAT_CONTRACT_ADDRESS = "0xaDa4DbDD000B7Cd3C4a116044bcb5D5c61d1b9D4";
 const CHIBI_VOUCHERS_CONTRACT_ADDRESS = "0x5BdBc6A92004733744b413BED6b6DB003f07B63f";
 
-// const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5"
+const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5"
 const Web3Context = createContext();
 
 export const Web3Provider = (props) => {
