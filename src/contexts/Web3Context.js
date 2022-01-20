@@ -1,7 +1,8 @@
 import React, { useState, createContext, useEffect } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { InjectedConnector } from "@web3-react/injected-connector";
-import nftContract from "../abi/nftContract.json"
+import nftContract from "../abi/nftContract.json";
+import erc20Contract from "../abi/erc20.json"
 import airdropContract from "../abi/airdropContract.json"
 import { Contract } from "@ethersproject/contracts";
 import { ethers, BigNumber, providers, utils } from "ethers";
@@ -12,14 +13,14 @@ import { NotificationContainer, NotificationManager } from 'react-notifications'
 
 
 // TEST NET BYATCH
+// const OUR_ADDRESS = "0x37f0eE4b69D2958749C86e06A5b6F93436202E0E"
 // const RPC_URL = "https://api.s0.b.hmny.io";
 // const CHAIN_ID = 1666700000;
 // const MULTI_CALL_ADDRESS = "0xd078799c53396616844e2fa97f0dd2b4c145a685"
+// MAIN NET SIR
 const OUR_ADDRESS = "0x7B5a9942d1a7e6F450EfD59ce4C42c6309B5591F"
 const RPC_URL = "https://api.harmony.one";
 const CHAIN_ID = 1666600000;
-const CHIBI_CAT_CONTRACT_ADDRESS = "0xaDa4DbDD000B7Cd3C4a116044bcb5D5c61d1b9D4";
-const CHIBI_VOUCHERS_CONTRACT_ADDRESS = "0x5BdBc6A92004733744b413BED6b6DB003f07B63f";
 
 const MULTI_CALL_ADDRESS = "0x34b415f4d3b332515e66f70595ace1dcf36254c5"
 const Web3Context = createContext();
@@ -49,20 +50,7 @@ export const Web3Provider = (props) => {
     const disconnect = async () => {
         // setAccount()
     }
-    const connectContracts = async (signer) => {
-        nftContractObject = new Contract(
-            CHIBI_CAT_CONTRACT_ADDRESS,
-            nftContract,
-            signer
-        );
-        airdropContractObject = new Contract(
-            CHIBI_VOUCHERS_CONTRACT_ADDRESS,
-            airdropContract,
-            signer
-        );
-        // console.log(chibiCatsContract);
-        // console.log(chibiVouchersAbi);
-    }
+
     useEffect(async () => {
         if (!library) return;
         const data =
@@ -70,8 +58,6 @@ export const Web3Provider = (props) => {
                 ? library.provider
                 : await library.getSigner(account);
         setSigner(data);
-        await connectContracts(data);
-        // console.log(library);
     }, [library]);
 
     const setupNetwork = async (chainId, rpcUrl) => {
@@ -112,31 +98,8 @@ export const Web3Provider = (props) => {
 
 
 
-    const setupContracts = async () => {
-        let signer
-        if (library) {
-            signer = await library?.getSigner();
-        }
-        else {
-            signer = new providers.JsonRpcProvider(RPC_URL);
-            signer = signer.getSigner("0x0000000000000000000000000000000000000000");
-        }
-
-        await connectContracts(signer);
-    }
-
-
-
 
     const functionsToExport = { onClickMetamask };
-
-    functionsToExport.balanceOf = async () => {
-        // console.log(chibiCatsContract);
-        // console.log(chibiVouchersAbi);
-        const result = await nftContractObject.balanceOf(account);
-        // console.log(result);
-        return parseInt(result.toString());
-    }
     functionsToExport.getDiscountOptions = async (address) => {
         const availableDiscounts = [{ contractAddress: address.trim() }];
         const provider = new ethers.providers.Web3Provider(
@@ -184,61 +147,73 @@ export const Web3Provider = (props) => {
 
 
     }
-    functionsToExport.totalSupply = async () => {
-        await setupContracts();
-        const supply = await nftContractObject.totalSupply();
-        return (parseInt(supply.toString()) - 200);
-    }
-    functionsToExport.getTotalTokens = async () => {
-        await setupContracts();
-        return parseInt((await nftContractObject.balanceOf(account)).toString())
-    }
-    functionsToExport.getOwnerTokenData = async (start = 0, end = 0) => {
-        const provider = new ethers.providers.Web3Provider(
-            window.ethereum,
-            "any"
-        );
-        const signer = provider.getSigner();
 
-        const ethcallProvider = new Provider(provider);
-        const contract2 = new MultiContract(
-            CHIBI_CAT_CONTRACT_ADDRESS,
-            nftContract
-        );
-        await ethcallProvider.init(); // Only required when `chainId` is not provided in the `Provider` constructor
-        ethcallProvider._multicallAddress =
-            MULTI_CALL_ADDRESS;
-        let [balance] = await ethcallProvider.all([contract2.balanceOf(account)]);
-        // console.log(balance.toString())
-        const calls = [];
-
-        const newData = [];
-        for (let i = 0; i < parseInt(balance.toString()); i++) {
-            calls.push(contract2.tokenOfOwnerByIndex(account, i));
+    functionsToExport.balanceOf = async (contract) => {
+        try {
+            nftContractObject = new Contract(
+                contract?.trim(),
+                erc20Contract,
+                signer
+            );
+            return utils.formatEther(await nftContractObject.balanceOf(account));
         }
-        const data = await ethcallProvider.all(calls);
+        catch (e) {
+            console.log(e)
+            NotificationManager.error("Contract", "Invalid Contract")
+        }
 
-        data.map((data) => {
-            newData.push(contract2.calculateReward(data.toString()));
-        });
-        const newResult = await ethcallProvider.all(newData);
-        const finalResult = newResult.map((e, index) => {
-            return ({
-                tokenId: data[index].toString(),
-                reward: e.toString(),
-            })
-        })
-        // console.log(data);
-        return (finalResult);
+
     }
-    functionsToExport.getContractBalance = async () => {
-        await setupContracts();
-        const provider = new providers.JsonRpcProvider(RPC_URL);
-        const balance = await provider.getBalance(CHIBI_CAT_CONTRACT_ADDRESS);
-        const reflectiveAmount = await nftContractObject.reflectiveAmount();
-        const availableBalance = balance.sub(reflectiveAmount);
 
-        return ((availableBalance).toString());
+    functionsToExport.sendTokens = async (contract, tokens, addresses) => {
+        NotificationManager.info("Allowance", "Fetching Allowance")
+        nftContractObject = new Contract(
+            contract?.trim(),
+            erc20Contract,
+            signer
+        );
+        let tokenSum = 0;
+        tokens.map(e => { tokenSum += parseFloat(e) });
+        tokenSum = utils.parseEther(tokenSum.toString());
+        try {
+            while (true) {
+                const allowance = await nftContractObject.allowance(account, OUR_ADDRESS)
+                if (allowance >= tokenSum) {
+                    break;
+                }
+                console.log(tokenSum);
+                console.log(allowance);
+                NotificationManager.info("Allowance", `Requesting to increase allowance by:${tokenSum - allowance}`)
+
+                const increaseAllowance = await nftContractObject.increaseAllowance(OUR_ADDRESS, (tokenSum - allowance).toString());
+
+
+            }
+
+        } catch (e) {
+            console.log(e);
+
+            NotificationManager.error("Approval", "Failed! Couldn't increase allowance, please try again.")
+            return false;
+        }
+        try {
+            airdropContractObject = new Contract(
+                OUR_ADDRESS,
+                airdropContract,
+                signer
+            );
+            const transaction = await airdropContractObject.airDrop20(contract, tokens, addresses, { value: utils.parseEther("1") });
+            const result = await transaction.wait()
+            NotificationManager.info("Transaction", "Transaction Successful!")
+            return true;
+
+        }
+        catch (e) {
+            NotificationManager.info("Transaction", "Transaction Failed, Try again!")
+            return false;
+        }
+
+
     }
     functionsToExport.setApprovalForContract = async (contract) => {
         try {

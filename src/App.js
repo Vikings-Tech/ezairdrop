@@ -23,6 +23,7 @@ import Home from './pages/Home/index';
 import FAQ from './pages/FAQ/index';
 import Donate from './pages/Donate/index';
 import Footer from './components/Footer/index';
+import Erc20 from './pages/Airdrop/Erc20';
 
 
 function getLibrary(provider) {
@@ -51,6 +52,7 @@ function App() {
             <Navbar />
             <div style={{ minHeight: "90vh" }}>
               <Routes>
+                <Route path="/airdrop/erc20" element={<Erc20 />} />
                 <Route path="/airdrop" element={<Airdrop />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/donate" element={<Donate />} />
