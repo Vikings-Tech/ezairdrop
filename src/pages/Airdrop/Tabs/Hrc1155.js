@@ -24,6 +24,7 @@ const defaultForm = {
     contractAddress: "",
     rangeRawText: "",
     rawSelectedAddresses: "",
+    rawSelectedAmount: "",
     availableBalance: 0,
     totalSelectedTokens: 0,
     selectedTokens: [],
@@ -48,13 +49,13 @@ const Hrc1155 = ({}) => {
         setSend("Send Tokens");
     };
     const handleSend = async () => {
-        if (isOneAmount) {
+        if (isOneAmount && isOneAmountValue) {
             if (isNaN(formData?.rangeRawText?.trim())) {
                 NotificationManager.error(
-                    "Address"
-                    // `Invalid Amount: ${(formData?.rangeRawText || '')
-                    //   .toString()
-                    //   .slice(0, 40)}`
+                    "Address",
+                    `Invalid Amount: ${(formData?.rangeRawText || "")
+                        .toString()
+                        .slice(0, 40)}`
                 );
                 return;
             }
@@ -331,8 +332,11 @@ const Hrc1155 = ({}) => {
                             />
 
                             <div>
-                                {formData.selectedAddresses?.length ===
-                                formData.selectedTokens.length
+                                {/*
+                                formData.selectedAddresses?.length ===
+                                    formData.selectedTokens.length &&
+                                formData.selectedAmount.length ===
+                                    formData.selectedTokens.length
                                     ? "Looks Good!"
                                     : formData.selectedAddresses?.length >
                                       formData.selectedTokens.length
@@ -356,11 +360,84 @@ const Hrc1155 = ({}) => {
                                           1
                                               ? ""
                                               : "es"
-                                      }`}
+                                      }`
+                                    */}
+
+                                <div>
+                                    {formData.selectedAddresses?.length ===
+                                        formData.selectedTokens.length &&
+                                        formData.selectedAmount.length ===
+                                            formData.selectedTokens.length &&
+                                        "Looks Good"}
+                                </div>
+
+                                <div>
+                                    {formData.selectedAmount.length >
+                                        formData.selectedTokens.length &&
+                                        `You have exceeded by ${
+                                            formData.selectedAmount.length -
+                                            formData.selectedTokens.length
+                                        } value${
+                                            formData.selectedAmount.length -
+                                                formData.selectedTokens
+                                                    .length ===
+                                            1
+                                                ? ""
+                                                : "s"
+                                        } for amount`}
+                                </div>
+                                <div>
+                                    {formData.selectedAmount.length <
+                                        formData.selectedTokens.length &&
+                                        `You need atleast ${
+                                            formData.selectedTokens.length -
+                                            formData.selectedAmount.length
+                                        } more value${
+                                            formData.selectedTokens.length -
+                                                formData.selectedAmount
+                                                    ?.length ===
+                                            1
+                                                ? ""
+                                                : "s"
+                                        } for amount`}
+                                </div>
+
+                                <div>
+                                    {formData.selectedAddresses?.length >
+                                        formData.selectedTokens.length &&
+                                        `You have exceeded by ${
+                                            formData.selectedAddresses?.length -
+                                            formData.selectedTokens.length
+                                        } address${
+                                            formData.selectedAddresses?.length -
+                                                formData.selectedTokens
+                                                    .length ===
+                                            1
+                                                ? ""
+                                                : "es"
+                                        }`}
+                                </div>
+
+                                <div>
+                                    {formData.selectedAddresses?.length <
+                                        formData.selectedTokens.length &&
+                                        `You need atleast ${
+                                            formData.selectedTokens.length -
+                                            formData.selectedAddresses?.length
+                                        } more address${
+                                            formData.selectedTokens.length -
+                                                formData.selectedAddresses
+                                                    ?.length ===
+                                            1
+                                                ? ""
+                                                : "es"
+                                        }`}
+                                </div>
                             </div>
                             {isOneAmount &&
                                 isOneAmountValue &&
-                                formData.rangeRawText && (
+                                formData.rangeRawText &&
+                                formData.rawSelectedAmount && (
                                     <Button
                                         onClick={handleSend}
                                         disabled={isNaN(formData?.rangeRawText)}
