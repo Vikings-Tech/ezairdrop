@@ -1,32 +1,32 @@
-import React from 'react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
+import React from "react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 
-import Erc721 from './Tabs/Erc721';
-import Erc20 from './Tabs/Erc20';
-import Erc1155 from './Tabs/Erc1155';
+import Hrc721 from "./Tabs/Hrc721";
+import Hrc20 from "./Tabs/Hrc20";
+import Hrc1155 from "./Tabs/Hrc1155";
 
 function index() {
-  return (
-    <Tabs>
-      <TabList>
-        <Tab>ERC721</Tab>
-        <Tab>ERC20</Tab>
-        <Tab>ERC1155</Tab>
-      </TabList>
+    return (
+        <Tabs>
+            <TabList>
+                <Tab>HRC721</Tab>
+                <Tab>HRC20</Tab>
+                <Tab>HRC1155</Tab>
+            </TabList>
 
-      <TabPanels>
-        <TabPanel>
-          <Erc721 />
-        </TabPanel>
-        <TabPanel>
-          <Erc20 />
-        </TabPanel>
-        <TabPanel>
-          <Erc1155 />
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
-  );
+            <TabPanels>
+                <TabPanel>
+                    <Hrc721 />
+                </TabPanel>
+                <TabPanel>
+                    <Hrc20 />
+                </TabPanel>
+                <TabPanel>
+                    <Hrc1155 />
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
+    );
 }
 
 export default index;
