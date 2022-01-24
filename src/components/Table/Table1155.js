@@ -28,9 +28,9 @@ function TableElement({ addresses, tokenIds, amounts }) {
 
     for (let i = 0; i < maxNum; i++) {
         finalTable[i] = {
-            address: addresses[i] || "-",
-            tokenId: tokenIds[i] || 0,
-            amount: amounts[i] || 0,
+            address: addresses[i],
+            tokenId: tokenIds[i],
+            amount: amounts[i],
         };
     }
 
@@ -49,33 +49,27 @@ function TableElement({ addresses, tokenIds, amounts }) {
                 <Tbody>
                     {finalTable.map((row) => (
                         <Tr>
-                            <Td>
-                                <Editable
-                                    defaultValue={row.address}
-                                    placeholder="Address empty"
-                                >
+                            {/*<Td>
+                                <Editable defaultValue={row.address}>
                                     <EditablePreview />
                                     <EditableInput />
                                 </Editable>
                             </Td>
                             <Td isNumeric>
-                                <Editable
-                                    defaultValue={row.tokenId}
-                                    placeholder="Token ID empty"
-                                >
+                                <Editable defaultValue={row.tokenId}>
                                     <EditablePreview />
                                     <EditableInput />
                                 </Editable>
                             </Td>
                             <Td isNumeric>
-                                <Editable
-                                    defaultValue={row.amount}
-                                    placeholder="Amount empty"
-                                >
+                                <Editable defaultValue={row.amount}>
                                     <EditablePreview />
                                     <EditableInput />
                                 </Editable>
-                            </Td>
+                            </Td>*/}
+                            <Td>{row.address}</Td>
+                            <Td isNumeric>{row.tokenId}</Td>
+                            <Td isNumeric>{row.amount}</Td>
                         </Tr>
                     ))}
                 </Tbody>
