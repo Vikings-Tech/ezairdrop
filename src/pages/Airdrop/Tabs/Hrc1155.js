@@ -10,6 +10,7 @@ import {
     Spinner,
     Checkbox,
     Box,
+    VStack,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
@@ -21,6 +22,7 @@ import {
     NotificationContainer,
     NotificationManager,
 } from "react-notifications";
+import TableElement from "../../../components/Table/Table1155";
 const defaultForm = {
     contractAddress: "",
     rangeRawText: "",
@@ -234,7 +236,7 @@ const Hrc1155 = ({}) => {
                     {
                         // verifyToken &&
                         <>
-                            <Text fontSize={"lg"}>
+                            <Text fontSize={25}>
                                 Available Balance: {formData.availableBalance}
                             </Text>
                             <Button
@@ -422,6 +424,21 @@ const Hrc1155 = ({}) => {
                                         }`}
                                 </Text>
                             </div>
+                            <VStack>
+                                <Text
+                                    fontSize={25}
+                                    mt={30}
+                                    mb={10}
+                                    color={"gray.400"}
+                                >
+                                    Preview Table
+                                </Text>
+                                <TableElement
+                                    addresses={formData.selectedAddresses}
+                                    tokenIds={formData.selectedTokens}
+                                    amounts={formData.selectedAmount}
+                                />
+                            </VStack>
                             {isOneAmount &&
                                 isOneAmountValue &&
                                 formData.rangeRawText &&

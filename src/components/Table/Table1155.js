@@ -21,9 +21,9 @@ function TableElement({ addresses, tokenIds, amounts }) {
     const tokenIds1 = [69, 69, 69];
     const amounts1 = [69, 69];
 
-    let addressNum = addresses1.length;
-    let tokenNum = tokenIds1.length;
-    let amountNum = amounts1.length;
+    let addressNum = addresses.length;
+    let tokenNum = tokenIds.length;
+    let amountNum = amounts.length;
 
     let maxNum =
         addressNum > tokenNum && addressNum > amountNum
@@ -36,9 +36,9 @@ function TableElement({ addresses, tokenIds, amounts }) {
 
     for (let i = 0; i < maxNum; i++) {
         finalTable[i] = {
-            address: addresses1[i],
-            tokenId: tokenIds1[i],
-            amount: amounts1[i],
+            address: addresses[i] || "-",
+            tokenId: tokenIds[i] || 0,
+            amount: amounts[i] || 0,
         };
     }
 
@@ -55,16 +55,15 @@ function TableElement({ addresses, tokenIds, amounts }) {
                     </Tr>
                 </Thead>
                 <Tbody>
-                    {finalTable &&
-                        finalTable.map((row) => (
-                            <Tr>
-                                <Td>{row.address}</Td>
-                                <Td isNumeric pl={0}>
-                                    {row.tokenId}
-                                </Td>
-                                <Td isNumeric>{row.amount}</Td>
-                            </Tr>
-                        ))}
+                    {finalTable.map((row) => (
+                        <Tr>
+                            <Td>{row.address}</Td>
+                            <Td isNumeric pl={0}>
+                                {row.tokenId}
+                            </Td>
+                            <Td isNumeric>{row.amount}</Td>
+                        </Tr>
+                    ))}
                 </Tbody>
             </Table>
         </Center>
