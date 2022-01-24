@@ -9,18 +9,12 @@ import {
     Td,
     TableCaption,
     Center,
+    Editable,
+    EditableInput,
+    EditablePreview,
 } from "@chakra-ui/react";
 
 function TableElement({ addresses, tokenIds, amounts }) {
-    const addresses1 = [
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-    ];
-    const tokenIds1 = [69, 69, 69];
-    const amounts1 = [69, 69];
-
     let addressNum = addresses.length;
     let tokenNum = tokenIds.length;
     let amountNum = amounts.length;
@@ -57,11 +51,33 @@ function TableElement({ addresses, tokenIds, amounts }) {
                 <Tbody>
                     {finalTable.map((row) => (
                         <Tr>
-                            <Td>{row.address}</Td>
-                            <Td isNumeric pl={0}>
-                                {row.tokenId}
+                            <Td>
+                                <Editable
+                                    defaultValue={row.address}
+                                    placeholder="Address empty"
+                                >
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
                             </Td>
-                            <Td isNumeric>{row.amount}</Td>
+                            <Td isNumeric>
+                                <Editable
+                                    defaultValue={row.tokenId}
+                                    placeholder="Token ID empty"
+                                >
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
+                            </Td>
+                            <Td isNumeric>
+                                <Editable
+                                    defaultValue={row.amount}
+                                    placeholder="Amount empty"
+                                >
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
+                            </Td>
                         </Tr>
                     ))}
                 </Tbody>
