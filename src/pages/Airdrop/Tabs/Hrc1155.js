@@ -9,6 +9,7 @@ import {
     Flex,
     Spinner,
     Checkbox,
+    Box,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
@@ -233,7 +234,6 @@ const Hrc1155 = ({}) => {
                     {
                         // verifyToken &&
                         <>
-                            <Text fontSize={"2xl"}>Enter Amounts:</Text>
                             <Text fontSize={"lg"}>
                                 Available Balance: {formData.availableBalance}
                             </Text>
@@ -257,14 +257,22 @@ const Hrc1155 = ({}) => {
                             >
                                 Refresh{refreshTokenLoad ? "ing" : ""} Balance
                             </Button>
-                            <Input
-                                value={formData.rangeRawText}
-                                onChange={(e) =>
-                                    handleChange("rangeRawText", e.target.value)
-                                }
-                                placeholder="Enter a range for token IDs ex: 1-5,5-25 or individually 2,3,5"
-                                size="lg"
-                            />
+                            <Box>
+                                <Text fontSize={20} textAlign={"left"} mb={5}>
+                                    Enter Token Ids:
+                                </Text>
+                                <Input
+                                    value={formData.rangeRawText}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            "rangeRawText",
+                                            e.target.value
+                                        )
+                                    }
+                                    w={"80vw"}
+                                    placeholder="Enter a range for token IDs ex: 1-5,5-25 or individually 2,3,5"
+                                />
+                            </Box>
                             <div>{formData.selectedTokens?.length}</div>
                             <Text fontSize={"lg"}>
                                 Selected Values:{" "}
@@ -287,17 +295,23 @@ const Hrc1155 = ({}) => {
                             </Checkbox>
 
                             {/*Token Amount*/}
-                            <Input
-                                value={formData.rawSelectedAmount}
-                                onChange={(e) =>
-                                    handleChange(
-                                        "rawSelectedAmount",
-                                        e.target.value
-                                    )
-                                }
-                                placeholder="Enter comma seperated amounts"
-                                size="lg"
-                            />
+                            <Box>
+                                <Text fontSize={20} textAlign={"left"} mb={5}>
+                                    Enter Amounts:
+                                </Text>
+                                <Input
+                                    w={"80vw"}
+                                    value={formData.rawSelectedAmount}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            "rawSelectedAmount",
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="Enter comma seperated amounts"
+                                    size="lg"
+                                />
+                            </Box>
                             <div>{formData.selectedAmount?.length}</div>
                             <Text fontSize={"lg"}>
                                 Selected Values:{" "}
@@ -319,59 +333,33 @@ const Hrc1155 = ({}) => {
                                 please enter only one value above)
                             </Checkbox>
 
-                            <Input
-                                value={formData.rawSelectedAddresses}
-                                onChange={(e) =>
-                                    handleChange(
-                                        "rawSelectedAddresses",
-                                        e.target.value
-                                    )
-                                }
-                                placeholder="Enter Addresses comma separated"
-                                size="lg"
-                            />
-
+                            <Box>
+                                <Text fontSize={20} textAlign={"left"} mb={5}>
+                                    Enter Addresses:
+                                </Text>
+                                <Input
+                                    value={formData.rawSelectedAddresses}
+                                    w={"80vw"}
+                                    onChange={(e) =>
+                                        handleChange(
+                                            "rawSelectedAddresses",
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="Enter Addresses comma separated"
+                                    size="lg"
+                                />
+                            </Box>
                             <div>
-                                {/*
-                                formData.selectedAddresses?.length ===
-                                    formData.selectedTokens.length &&
-                                formData.selectedAmount.length ===
-                                    formData.selectedTokens.length
-                                    ? "Looks Good!"
-                                    : formData.selectedAddresses?.length >
-                                      formData.selectedTokens.length
-                                    ? `You have exceeded by ${
-                                          formData.selectedAddresses?.length -
-                                          formData.selectedTokens.length
-                                      } address ${
-                                          formData.selectedAddresses?.length -
-                                              formData.selectedTokens.length ===
-                                          1
-                                              ? ""
-                                              : "es"
-                                      }`
-                                    : `You need atleast ${
-                                          formData.selectedTokens.length -
-                                          formData.selectedAddresses?.length
-                                      } more address${
-                                          formData.selectedTokens.length -
-                                              formData.selectedAddresses
-                                                  ?.length ===
-                                          1
-                                              ? ""
-                                              : "es"
-                                      }`
-                                    */}
-
-                                <div>
+                                <Text mt={10} fontSize={20} color={"green.400"}>
                                     {formData.selectedAddresses?.length ===
                                         formData.selectedTokens.length &&
                                         formData.selectedAmount.length ===
                                             formData.selectedTokens.length &&
                                         "Looks Good"}
-                                </div>
+                                </Text>
 
-                                <div>
+                                <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAmount.length >
                                         formData.selectedTokens.length &&
                                         `You have exceeded by ${
@@ -385,8 +373,8 @@ const Hrc1155 = ({}) => {
                                                 ? ""
                                                 : "s"
                                         } for amount`}
-                                </div>
-                                <div>
+                                </Text>
+                                <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAmount.length <
                                         formData.selectedTokens.length &&
                                         `You need atleast ${
@@ -400,9 +388,9 @@ const Hrc1155 = ({}) => {
                                                 ? ""
                                                 : "s"
                                         } for amount`}
-                                </div>
+                                </Text>
 
-                                <div>
+                                <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAddresses?.length >
                                         formData.selectedTokens.length &&
                                         `You have exceeded by ${
@@ -416,9 +404,9 @@ const Hrc1155 = ({}) => {
                                                 ? ""
                                                 : "es"
                                         }`}
-                                </div>
+                                </Text>
 
-                                <div>
+                                <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAddresses?.length <
                                         formData.selectedTokens.length &&
                                         `You need atleast ${
@@ -432,7 +420,7 @@ const Hrc1155 = ({}) => {
                                                 ? ""
                                                 : "es"
                                         }`}
-                                </div>
+                                </Text>
                             </div>
                             {isOneAmount &&
                                 isOneAmountValue &&
@@ -440,7 +428,10 @@ const Hrc1155 = ({}) => {
                                 formData.rawSelectedAmount && (
                                     <Button
                                         onClick={handleSend}
-                                        disabled={isNaN(formData?.rangeRawText)}
+                                        disabled={
+                                            isNaN(formData?.rangeRawText) &&
+                                            isNaN(formData?.rawSelectedAmount)
+                                        }
                                         display={{
                                             base: "none",
                                             md: "inline-flex",
@@ -459,21 +450,26 @@ const Hrc1155 = ({}) => {
                                 )}
                         </>
                     }
-                    {successful && (
-                        <>
-                            <Text fontSize={"4xl"}>Transaction Successful</Text>
-                            <Link to="/donate">
-                                <Button
-                                    bg={"pink.400"}
-                                    color={"white"}
-                                    rounded={"full"}
-                                    px={6}
-                                >
-                                    Consider Donating!
-                                </Button>
-                            </Link>
-                        </>
-                    )}
+                    {
+                        //verifyToken
+                        successful && (
+                            <>
+                                <Text fontSize={"4xl"}>
+                                    Transaction Successful
+                                </Text>
+                                <Link to="/donate">
+                                    <Button
+                                        bg={"pink.400"}
+                                        color={"white"}
+                                        rounded={"full"}
+                                        px={6}
+                                    >
+                                        Consider Donating!
+                                    </Button>
+                                </Link>
+                            </>
+                        )
+                    }
                 </Stack>
             ) : (
                 <Center height={"80vh"}>
