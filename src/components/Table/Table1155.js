@@ -12,7 +12,13 @@ import {
     EditablePreview,
 } from "@chakra-ui/react";
 
-function TableElement({ addresses, tokenIds, amounts }) {
+function TableElement({
+    addresses,
+    tokenIds,
+    amounts,
+    isOneAmount,
+    isOneAmountValue,
+}) {
     let addressNum = addresses.length;
     let tokenNum = tokenIds.length;
     let amountNum = amounts.length;
@@ -32,6 +38,18 @@ function TableElement({ addresses, tokenIds, amounts }) {
             tokenId: tokenIds[i],
             amount: amounts[i],
         };
+    }
+
+    if (isOneAmount) {
+        finalTable.map((tableRow) => {
+            tableRow.tokenId = tokenIds[0];
+        });
+    }
+
+    if (isOneAmountValue) {
+        finalTable.map((tableRow) => {
+            tableRow.amount = amounts[0];
+        });
     }
 
     return (
