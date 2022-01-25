@@ -36,8 +36,8 @@ const defaultForm = {
     selectedAddresses: [],
 };
 
-const Hrc1155 = ({}) => {
-    const { account, balanceOf, sendTokens } = useContext(Web3Context);
+const Hrc1155 = ({ }) => {
+    const { account, balanceOf, sendErc1155Tokens, setApprovalForContract } = useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
     const [verifyToken, setVerifyToken] = useState();
     const [refreshTokenLoad, setRefreshTokenLoad] = useState(false);
@@ -51,69 +51,89 @@ const Hrc1155 = ({}) => {
         setVerifyToken(false);
         setSend("Send Tokens");
     };
-    const handleSend = async () => {
-        if (isOneAmount && isOneAmountValue) {
-            if (isNaN(formData?.rangeRawText?.trim())) {
-                NotificationManager.error(
-                    "Address",
-                    `Invalid Amount: ${(formData?.rangeRawText || "")
-                        .toString()
-                        .slice(0, 40)}`
-                );
-                return;
-            }
-            setSend("Sending Tokens");
-            if (
-                await sendTokens(
-                    formData.contractAddress,
-                    formData.selectedAddresses?.map((e) =>
-                        formData?.rangeRawText.toString()
-                    ),
-                    formData.selectedAddresses?.map((e) => e?.trim())
-                )
-            ) {
-                setSend("Sent Successfully!");
-                setSuccessful(true);
-                resetForm();
-            } else {
-                setSend("Send Tokens");
-            }
-            return;
-        }
-        let flag = false;
-        let index = -1;
-        formData?.selectedAddresses?.map((e, i) => {
-            if (!utils.isAddress(e.trim()) && !flag) {
-                flag = true;
-                index = i;
-            }
-        });
-        if (flag) {
+    const handleAuthorize = async () => {
+        if (!utils.isAddress(formData?.contractAddress)) {
             NotificationManager.error(
                 "Address",
-                `Invalid Contract Address: ${(
-                    formData?.selectedAddresses[index] || ""
-                )
+                `Invalid Contract Address: ${(formData?.contractAddress || "")
                     .toString()
                     .slice(0, 40)}`
             );
             return;
         }
-        setSend("Sending Tokens");
-        if (
-            await sendTokens(
-                formData.contractAddress,
-                formData.selectedTokens?.map((e) => e.toString()),
-                formData.selectedAmount?.map((e) => e.toString()),
-                formData.selectedAddresses?.map((e) => e?.trim())
-            )
-        ) {
-            setSend("Sent Successfully!");
-            setSuccessful(true);
-            resetForm();
+        console.log();
+        setLoadingVerify(true);
+        if (await setApprovalForContract(formData.contractAddress?.trim())) {
+            setVerifyToken(true);
         } else {
-            setSend("Send Tokens");
         }
+        setLoadingVerify(false);
+    };
+    const handleSend = async () => {
+        const { contractAddress, selectedTokens, selectedAmount, selectedAddresses } = formData;
+        await sendErc1155Tokens(contractAddress, selectedTokens, selectedAmount, selectedAddresses);
+        // if (isOneAmount && isOneAmountValue) {
+        //     if (isNaN(formData?.rangeRawText?.trim())) {
+        //         NotificationManager.error(
+        //             "Address",
+        //             `Invalid Amount: ${(formData?.rangeRawText || "")
+        //                 .toString()
+        //                 .slice(0, 40)}`
+        //         );
+        //         return;
+        //     }
+        //     setSend("Sending Tokens");
+        //     if (
+        //         await sendTokens(
+        //             formData.contractAddress,
+        //             formData.selectedAddresses?.map((e) =>
+        //                 formData?.rangeRawText.toString()
+        //             ),
+        //             formData.selectedAddresses?.map((e) => e?.trim())
+        //         )
+        //     ) {
+        //         setSend("Sent Successfully!");
+        //         setSuccessful(true);
+        //         resetForm();
+        //     } else {
+        //         setSend("Send Tokens");
+        //     }
+        //     return;
+        // }
+        // let flag = false;
+        // let index = -1;
+        // formData?.selectedAddresses?.map((e, i) => {
+        //     if (!utils.isAddress(e.trim()) && !flag) {
+        //         flag = true;
+        //         index = i;
+        //     }
+        // });
+        // if (flag) {
+        //     NotificationManager.error(
+        //         "Address",
+        //         `Invalid Contract Address: ${(
+        //             formData?.selectedAddresses[index] || ""
+        //         )
+        //             .toString()
+        //             .slice(0, 40)}`
+        //     );
+        //     return;
+        // }
+        // setSend("Sending Tokens");
+        // if (
+        //     await sendTokens(
+        //         formData.contractAddress,
+        //         formData.selectedTokens?.map((e) => e.toString()),
+        //         formData.selectedAmount?.map((e) => e.toString()),
+        //         formData.selectedAddresses?.map((e) => e?.trim())
+        //     )
+        // ) {
+        //     setSend("Sent Successfully!");
+        //     setSuccessful(true);
+        //     resetForm();
+        // } else {
+        //     setSend("Send Tokens");
+        // }
     };
     const handleChange = (field, value) => {
         const newFormData = { ...formData };
@@ -178,87 +198,65 @@ const Hrc1155 = ({}) => {
                     py={{ base: 20, md: 28 }}
                     px={{ base: 20, md: 28 }}
                 >
-                    {/*
-          <Text fontSize={'4xl'}>Airdrop</Text>
 
-          <div>
-            Note - Current contract is only in it's beta stage and we will be
-            observing community use and modify and release a new contract based
-            on that. Make sure you only use the contract with our webpage and do
-            not have a contract dependency on it. Developers hold the right to
-            pause all of it's functionality at any point.
-          </div>
-          <Text fontSize={'2xl'}>Enter Contract Address(HRC1155)</Text>
-          <Input
-            value={formData.contractAddress}
-            onChange={e => handleChange('contractAddress', e.target.value)}
-            placeholder="Enter Contract Address"
-            size="lg"
-            disabled={verifyToken}
-          />
-          <Flex align={'center'}>
-            {loadingVerify && (
-              <Spinner
-                mr={4}
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="pink.400"
-                size="xl"
-              />
-            )}
-            <Button
-              onClick={handleSubmit}
-              mr={2}
-              disabled={verifyToken || loadingVerify}
-              display={{ base: 'none', md: 'inline-flex' }}
-              fontSize={'sm'}
-              fontWeight={600}
-              color={'white'}
-              bg={'pink.400'}
-              href={'#'}
-              _hover={{
-                bg: 'pink.300',
-              }}
-            >
-              {verifyToken ? 'Verified' : 'Verify'}
-            </Button>
-            <Tooltip
-              label="To ensure the contract address is valid and sufficient balance is present"
-              fontSize="md"
-            >
-              <span>
-                <FaInfoCircle />
-              </span>
-            </Tooltip>
-          </Flex>
-            */}
+                    <Text fontSize={'4xl'}>Airdrop</Text>
+
+                    <div>
+                        Note - Current contract is only in it's beta stage and we will be
+                        observing community use and modify and release a new contract based
+                        on that. Make sure you only use the contract with our webpage and do
+                        not have a contract dependency on it. Developers hold the right to
+                        pause all of it's functionality at any point.
+                    </div>
+                    <Text fontSize={'2xl'}>Enter Contract Address(HRC1155)</Text>
+                    <Input
+                        value={formData.contractAddress}
+                        onChange={e => handleChange('contractAddress', e.target.value)}
+                        placeholder="Enter Contract Address"
+                        size="lg"
+                        disabled={verifyToken}
+                    />
+                    <Flex align={'center'}>
+                        {loadingVerify && (
+                            <Spinner
+                                mr={4}
+                                thickness="4px"
+                                speed="0.65s"
+                                emptyColor="gray.200"
+                                color="pink.400"
+                                size="xl"
+                            />
+                        )}
+                        <Button
+                            onClick={handleAuthorize}
+                            mr={2}
+                            disabled={verifyToken || loadingVerify}
+                            display={{ base: 'none', md: 'inline-flex' }}
+                            fontSize={'sm'}
+                            fontWeight={600}
+                            color={'white'}
+                            bg={'pink.400'}
+                            href={'#'}
+                            _hover={{
+                                bg: 'pink.300',
+                            }}
+                        >
+                            {verifyToken ? 'Verified' : 'Verify'}
+                        </Button>
+                        <Tooltip
+                            label="To ensure the contract address is valid and sufficient balance is present"
+                            fontSize="md"
+                        >
+                            <span>
+                                <FaInfoCircle />
+                            </span>
+                        </Tooltip>
+                    </Flex>
+
                     {
                         // verifyToken &&
                         <>
-                            <Text fontSize={25}>
-                                Available Balance: {formData.availableBalance}
-                            </Text>
-                            <Button
-                                onClick={async () => {
-                                    setRefreshTokenLoad(true);
-                                    await handleSubmit();
-                                    setRefreshTokenLoad(false);
-                                }}
-                                ml={2}
-                                disabled={refreshTokenLoad}
-                                display={{ base: "none", md: "inline-flex" }}
-                                fontSize={"sm"}
-                                fontWeight={600}
-                                color={"white"}
-                                bg={"pink.400"}
-                                href={"#"}
-                                _hover={{
-                                    bg: "pink.300",
-                                }}
-                            >
-                                Refresh{refreshTokenLoad ? "ing" : ""} Balance
-                            </Button>
+
                             <Box>
                                 <Text fontSize={20} textAlign={"left"} mb={5}>
                                     Enter Token Ids:
@@ -357,70 +355,62 @@ const Hrc1155 = ({}) => {
                                     {formData.selectedAddresses?.length ===
                                         formData.selectedTokens.length &&
                                         formData.selectedAmount.length ===
-                                            formData.selectedTokens.length &&
+                                        formData.selectedTokens.length &&
                                         "Looks Good"}
                                 </Text>
 
                                 <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAmount.length >
                                         formData.selectedTokens.length &&
-                                        `You have exceeded by ${
-                                            formData.selectedAmount.length -
-                                            formData.selectedTokens.length
-                                        } value${
-                                            formData.selectedAmount.length -
-                                                formData.selectedTokens
-                                                    .length ===
+                                        `You have exceeded by ${formData.selectedAmount.length -
+                                        formData.selectedTokens.length
+                                        } value${formData.selectedAmount.length -
+                                            formData.selectedTokens
+                                                .length ===
                                             1
-                                                ? ""
-                                                : "s"
+                                            ? ""
+                                            : "s"
                                         } for amount`}
                                 </Text>
                                 <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAmount.length <
                                         formData.selectedTokens.length &&
-                                        `You need atleast ${
-                                            formData.selectedTokens.length -
-                                            formData.selectedAmount.length
-                                        } more value${
-                                            formData.selectedTokens.length -
-                                                formData.selectedAmount
-                                                    ?.length ===
+                                        `You need atleast ${formData.selectedTokens.length -
+                                        formData.selectedAmount.length
+                                        } more value${formData.selectedTokens.length -
+                                            formData.selectedAmount
+                                                ?.length ===
                                             1
-                                                ? ""
-                                                : "s"
+                                            ? ""
+                                            : "s"
                                         } for amount`}
                                 </Text>
 
                                 <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAddresses?.length >
                                         formData.selectedTokens.length &&
-                                        `You have exceeded by ${
-                                            formData.selectedAddresses?.length -
-                                            formData.selectedTokens.length
-                                        } address${
-                                            formData.selectedAddresses?.length -
-                                                formData.selectedTokens
-                                                    .length ===
+                                        `You have exceeded by ${formData.selectedAddresses?.length -
+                                        formData.selectedTokens.length
+                                        } address${formData.selectedAddresses?.length -
+                                            formData.selectedTokens
+                                                .length ===
                                             1
-                                                ? ""
-                                                : "es"
+                                            ? ""
+                                            : "es"
                                         }`}
                                 </Text>
 
                                 <Text mt={10} fontSize={20} color={"red.400"}>
                                     {formData.selectedAddresses?.length <
                                         formData.selectedTokens.length &&
-                                        `You need atleast ${
-                                            formData.selectedTokens.length -
-                                            formData.selectedAddresses?.length
-                                        } more address${
-                                            formData.selectedTokens.length -
-                                                formData.selectedAddresses
-                                                    ?.length ===
+                                        `You need atleast ${formData.selectedTokens.length -
+                                        formData.selectedAddresses?.length
+                                        } more address${formData.selectedTokens.length -
+                                            formData.selectedAddresses
+                                                ?.length ===
                                             1
-                                                ? ""
-                                                : "es"
+                                            ? ""
+                                            : "es"
                                         }`}
                                 </Text>
                             </div>
@@ -439,16 +429,11 @@ const Hrc1155 = ({}) => {
                                     amounts={formData.selectedAmount}
                                 />
                             </VStack>
-                            {isOneAmount &&
-                                isOneAmountValue &&
-                                formData.rangeRawText &&
+                            {
                                 formData.rawSelectedAmount && (
                                     <Button
                                         onClick={handleSend}
-                                        disabled={
-                                            isNaN(formData?.rangeRawText) &&
-                                            isNaN(formData?.rawSelectedAmount)
-                                        }
+
                                         display={{
                                             base: "none",
                                             md: "inline-flex",

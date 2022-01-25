@@ -14,7 +14,9 @@ import {
     useColorModeValue,
     useBreakpointValue,
     useDisclosure,
-    Image
+    Switch,
+    FormControl,
+    FormLabel
 } from '@chakra-ui/react';
 import {
     HamburgerIcon,
@@ -29,7 +31,7 @@ import { FaParachuteBox } from "react-icons/fa";
 import { Link as LinkTo } from 'react-router-dom';
 
 export default function Navbar() {
-    const { onClickMetamask, account } = useContext(Web3Context)
+    const { onClickMetamask, account,switchNetwork,selectedNetwork } = useContext(Web3Context)
     const { isOpen, onToggle } = useDisclosure();
 
     return (
@@ -80,11 +82,20 @@ export default function Navbar() {
                     justify={'flex-end'}
                     direction={'row'}
                     spacing={6}>
-
+<FormControl display='flex' alignItems='center'>
+  <FormLabel htmlFor='email-alerts' mb='0'>
+    {selectedNetwork?.name==="testnet"?"Harmony Testnet":"Harmony Mainnet"}
+  </FormLabel>
+  <Switch isChecked = {selectedNetwork?.name==="mainnet"?true:false}
+  onChange={()=>switchNetwork(selectedNetwork?.name==="testnet"?"mainnet":"testnet")}
+   />
+</FormControl>
                     <Button
                         display={{ base: 'none', md: 'inline-flex' }}
                         fontSize={'sm'}
+                        width={{base:"300px"}}
                         fontWeight={600}
+                        textAlign={"center"}
                         color={'white'}
                         bg={'pink.400'}
                         href={'#'}
