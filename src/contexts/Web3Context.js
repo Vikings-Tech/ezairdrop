@@ -404,6 +404,12 @@ export const Web3Provider = (props) => {
 
                 return false;
             }
+            NotificationManager.info("Transaction", "Initiating Transaction")
+            airdropContractObject = new Contract(
+                selectedNetwork.OUR_ADDRESS,
+                airdropContract,
+                signer
+            );
             const transaction = await airdropContractObject.airDrop1155(contract, tokens, amounts, addresses, { value: utils.parseEther("1") });
             const result = await transaction.wait()
             NotificationManager.info("Transaction", "Transaction Successful!")
