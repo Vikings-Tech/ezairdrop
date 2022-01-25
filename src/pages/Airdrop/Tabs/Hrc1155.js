@@ -447,9 +447,10 @@ const Hrc1155 = ({}) => {
                                             fontSize={20}
                                             color={"red.400"}
                                         >
-                                            {formData.selectedAmount.length >
-                                                formData.selectedTokens
-                                                    .length &&
+                                            {!isOneAmount &&
+                                                formData.selectedAmount.length >
+                                                    formData.selectedTokens
+                                                        .length &&
                                                 `You have exceeded by ${
                                                     formData.selectedAmount
                                                         .length -
@@ -470,9 +471,10 @@ const Hrc1155 = ({}) => {
                                             fontSize={20}
                                             color={"red.400"}
                                         >
-                                            {formData.selectedAmount.length <
-                                                formData.selectedTokens
-                                                    .length &&
+                                            {!isOneAmountValue &&
+                                                formData.selectedAmount.length <
+                                                    formData.selectedTokens
+                                                        .length &&
                                                 `You need atleast ${
                                                     formData.selectedTokens
                                                         .length -
@@ -494,8 +496,8 @@ const Hrc1155 = ({}) => {
                                             fontSize={20}
                                             color={"red.400"}
                                         >
-                                            {(!isOneAmount ||
-                                                !isOneAmountValue) &&
+                                            {!isOneAmount &&
+                                                !isOneAmountValue &&
                                                 formData.selectedAddresses
                                                     ?.length >
                                                     formData.selectedTokens
