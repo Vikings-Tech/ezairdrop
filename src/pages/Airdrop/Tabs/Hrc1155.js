@@ -77,6 +77,9 @@ const Hrc1155 = ({}) => {
             selectedAmount,
             selectedAddresses,
         } = formData;
+
+        console.log(formData);
+
         await sendErc1155Tokens(
             contractAddress,
             selectedTokens,
@@ -283,25 +286,17 @@ const Hrc1155 = ({}) => {
                                 </Text>
                                 <Input
                                     value={formData.rangeRawText}
-                                    onChange={(e) =>
-                                        handleChange(
-                                            "rangeRawText",
-                                            e.target.value
-                                        )
-                                    }
+                                    onChange={(e) => {
+                                        if (!isOneAmount) {
+                                            handleChange(
+                                                "rangeRawText",
+                                                e.target.value
+                                            );
+                                        }
+                                    }}
                                     w={"80vw"}
                                     placeholder="Enter a range for token IDs ex: 1-5,5-25 or individually 2,3,5"
                                 />
-                                <Text
-                                    fontSize={20}
-                                    textAlign={"left"}
-                                    mt={5}
-                                    color={"red.500"}
-                                >
-                                    {isOneAmount &&
-                                        formData.selectedTokens.length > 1 &&
-                                        "One Value!"}
-                                </Text>
                             </Box>
                             <div>{formData.selectedTokens?.length}</div>
                             <Text fontSize={"lg"}>
@@ -315,9 +310,23 @@ const Hrc1155 = ({}) => {
                             </Text>
 
                             <Checkbox
-                                onChange={(e) =>
-                                    setIsOneAmount(e.target.checked)
-                                }
+                                onChange={(e) => {
+                                    setIsOneAmount(e.target.checked);
+
+                                    const addressLength =
+                                        formData.selectedAddresses.length;
+
+                                    if (e.target.checked) {
+                                        for (
+                                            let i = 1;
+                                            i < addressLength;
+                                            i++
+                                        ) {
+                                            formData.selectedTokens[i] =
+                                                formData.selectedTokens[0];
+                                        }
+                                    }
+                                }}
                                 isChecked={isOneAmount}
                             >
                                 Send same value to all addresses(If selected,
@@ -332,26 +341,17 @@ const Hrc1155 = ({}) => {
                                 <Input
                                     w={"80vw"}
                                     value={formData.rawSelectedAmount}
-                                    onChange={(e) =>
-                                        handleChange(
-                                            "rawSelectedAmount",
-                                            e.target.value
-                                        )
-                                    }
+                                    onChange={(e) => {
+                                        if (!isOneAmountValue) {
+                                            handleChange(
+                                                "rawSelectedAmount",
+                                                e.target.value
+                                            );
+                                        }
+                                    }}
                                     placeholder="Enter comma seperated amounts"
                                     size="lg"
                                 />
-
-                                <Text
-                                    fontSize={20}
-                                    textAlign={"left"}
-                                    mt={5}
-                                    color={"red.500"}
-                                >
-                                    {isOneAmountValue &&
-                                        formData.selectedAmount.length > 1 &&
-                                        "One Value!"}
-                                </Text>
                             </Box>
                             <div>{formData.selectedAmount?.length}</div>
                             <Text fontSize={"lg"}>
@@ -365,9 +365,29 @@ const Hrc1155 = ({}) => {
                             </Text>
 
                             <Checkbox
-                                onChange={(e) =>
-                                    setIsOneAmountValue(e.target.checked)
-                                }
+                                onChange={(e) => {
+                                    setIsOneAmountValue(e.target.checked);
+
+                                    const addressLength =
+                                        formData.selectedAddresses.length;
+                                    const amountLength =
+                                        formData.selectedAmount.length;
+
+                                    for (let i = 1; i < addressLength; i++) {
+                                        formData.selectedAmount[i] =
+                                            formData.selectedAmount[0];
+                                    }
+
+                                    if (
+                                        e.target.checked &&
+                                        amountLength > addressLength
+                                    ) {
+                                        formData.selectedAmount.splice(
+                                            addressLength,
+                                            amountLength - addressLength
+                                        );
+                                    }
+                                }}
                                 isChecked={isOneAmountValue}
                             >
                                 Send same amount to all addresses(If selected,
@@ -399,33 +419,53 @@ const Hrc1155 = ({}) => {
                                             fontSize={20}
                                             color={"green.400"}
                                         >
-                                            {((formData.selectedAddresses
-                                                ?.length ===
+                                            {formData.selectedAddresses
+                                                ?.length !== 0 &&
                                                 formData.selectedTokens
-                                                    .length &&
+                                                    .length !== 0 &&
                                                 formData.selectedAmount
-                                                    .length ===
-                                                    formData.selectedTokens
-                                                        .length) ||
-                                                (formData.selectedAddresses
+                                                    .length !== 0 &&
+                                                ((formData.selectedAddresses
                                                     ?.length ===
                                                     formData.selectedTokens
                                                         .length &&
-                                                    isOneAmountValue) ||
-                                                (formData.selectedAddresses
-                                                    ?.length ===
                                                     formData.selectedAmount
-                                                        .length &&
-                                                    isOneAmount) ||
-                                                (formData.selectedAddresses
-                                                    ?.length >= 0 &&
-                                                    formData.selectedAmount
-                                                        .length !== 0 &&
-                                                    formData.selectedTokens
-                                                        .length !== 0 &&
-                                                    isOneAmount &&
-                                                    isOneAmountValue)) &&
+                                                        .length ===
+                                                        formData.selectedTokens
+                                                            .length) ||
+                                                    (formData.selectedAddresses
+                                                        ?.length ===
+                                                        formData.selectedTokens
+                                                            .length &&
+                                                        isOneAmountValue) ||
+                                                    (formData.selectedAddresses
+                                                        ?.length ===
+                                                        formData.selectedAmount
+                                                            .length &&
+                                                        isOneAmount) ||
+                                                    (formData.selectedAddresses
+                                                        ?.length >= 0 &&
+                                                        formData.selectedAmount
+                                                            .length !== 0 &&
+                                                        formData.selectedTokens
+                                                            .length !== 0 &&
+                                                        isOneAmount &&
+                                                        isOneAmountValue)) &&
                                                 "Looks Good"}
+                                        </Text>
+
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"red.400"}
+                                        >
+                                            {formData.selectedAddresses
+                                                ?.length === 0 &&
+                                                formData.selectedTokens
+                                                    .length === 0 &&
+                                                formData.selectedAmount
+                                                    .length === 0 &&
+                                                "Input Fields Empty"}
                                         </Text>
 
                                         <Text
@@ -449,7 +489,7 @@ const Hrc1155 = ({}) => {
                                         >
                                             {!isOneAmount &&
                                                 formData.selectedAmount.length >
-                                                    formData.selectedTokens
+                                                    formData.selectedAddresses
                                                         .length &&
                                                 `You have exceeded by ${
                                                     formData.selectedAmount
@@ -496,8 +536,8 @@ const Hrc1155 = ({}) => {
                                             fontSize={20}
                                             color={"red.400"}
                                         >
-                                            {!isOneAmount &&
-                                                !isOneAmountValue &&
+                                            {(!isOneAmount ||
+                                                !isOneAmountValue) &&
                                                 formData.selectedAddresses
                                                     ?.length >
                                                     formData.selectedTokens
