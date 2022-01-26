@@ -1,14 +1,5 @@
 import React from "react";
-import {
-    ChakraProvider,
-    Box,
-    Text,
-    Link,
-    VStack,
-    Code,
-    Grid,
-    theme,
-} from "@chakra-ui/react";
+import { ChakraProvider, theme } from "@chakra-ui/react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { Logo } from "./Logo";
@@ -27,7 +18,6 @@ import FAQ from "./pages/FAQ/index";
 import Donate from "./pages/Donate/index";
 import Footer from "./components/Footer/index";
 import Hrc20 from "./pages/Airdrop/Tabs/Hrc20";
-import TableElement from "./components/Table/Table1155";
 
 function getLibrary(provider) {
     var library;
@@ -62,12 +52,6 @@ function App() {
                                 <Route path="/donate" element={<Donate />} />
 
                                 <Route path="/" element={<Home />} />
-
-                                {/*Testing a route*/}
-                                <Route
-                                    path="/table"
-                                    element={<TableElement />}
-                                />
                             </Routes>
                         </div>
                         <Footer />

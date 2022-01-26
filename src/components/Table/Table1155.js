@@ -3,24 +3,22 @@ import {
     Table,
     Thead,
     Tbody,
-    Tfoot,
     Tr,
     Th,
     Td,
-    TableCaption,
     Center,
+    Editable,
+    EditableInput,
+    EditablePreview,
 } from "@chakra-ui/react";
 
-function TableElement({ addresses, tokenIds, amounts }) {
-    const addresses1 = [
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-        "0x0B3145BEa727Ea940EfCFa53B77331b0Eb664648",
-    ];
-    const tokenIds1 = [69, 69, 69];
-    const amounts1 = [69, 69];
-
+function TableElement({
+    addresses,
+    tokenIds,
+    amounts,
+    isOneAmount,
+    isOneAmountValue,
+}) {
     let addressNum = addresses.length;
     let tokenNum = tokenIds.length;
     let amountNum = amounts.length;
@@ -36,10 +34,22 @@ function TableElement({ addresses, tokenIds, amounts }) {
 
     for (let i = 0; i < maxNum; i++) {
         finalTable[i] = {
-            address: addresses[i] || "-",
-            tokenId: tokenIds[i] || 0,
-            amount: amounts[i] || 0,
+            address: addresses[i],
+            tokenId: tokenIds[i],
+            amount: amounts[i],
         };
+    }
+
+    if (isOneAmount) {
+        finalTable.map((tableRow) => {
+            tableRow.tokenId = tokenIds[0];
+        });
+    }
+
+    if (isOneAmountValue) {
+        finalTable.map((tableRow) => {
+            tableRow.amount = amounts[0];
+        });
     }
 
     return (
@@ -57,10 +67,26 @@ function TableElement({ addresses, tokenIds, amounts }) {
                 <Tbody>
                     {finalTable.map((row) => (
                         <Tr>
-                            <Td>{row.address}</Td>
-                            <Td isNumeric pl={0}>
-                                {row.tokenId}
+                            {/*<Td>
+                                <Editable defaultValue={row.address}>
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
                             </Td>
+                            <Td isNumeric>
+                                <Editable defaultValue={row.tokenId}>
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
+                            </Td>
+                            <Td isNumeric>
+                                <Editable defaultValue={row.amount}>
+                                    <EditablePreview />
+                                    <EditableInput />
+                                </Editable>
+                            </Td>*/}
+                            <Td>{row.address}</Td>
+                            <Td isNumeric>{row.tokenId}</Td>
                             <Td isNumeric>{row.amount}</Td>
                         </Tr>
                     ))}
