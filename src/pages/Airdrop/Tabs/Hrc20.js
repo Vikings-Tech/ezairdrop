@@ -30,7 +30,7 @@ const defaultForm = {
     selectedAddresses: [],
 };
 
-const Hrc20 = ({}) => {
+const Hrc20 = ({ }) => {
     const { account, balanceOf, sendTokens } = useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
     const [verifyToken, setVerifyToken] = useState();
@@ -56,6 +56,9 @@ const Hrc20 = ({}) => {
                 return;
             }
             setSend("Sending Tokens");
+            console.log(formData.selectedAddresses?.map((e) =>
+                formData?.rangeRawText.toString()
+            ))
             if (
                 await sendTokens(
                     formData.contractAddress,
@@ -285,47 +288,43 @@ const Hrc20 = ({}) => {
                             {!isOneAmount && (
                                 <div>
                                     {formData.selectedAddresses?.length ===
-                                    formData.selectedTokens.length
+                                        formData.selectedTokens.length
                                         ? "Looks Good!"
                                         : formData.selectedAddresses?.length >
-                                          formData.selectedTokens.length
-                                        ? `You have exceeded by ${
-                                              formData.selectedAddresses
-                                                  ?.length -
-                                              formData.selectedTokens.length
-                                          } address${
-                                              formData.selectedAddresses
-                                                  ?.length -
-                                                  formData.selectedTokens
-                                                      .length ===
-                                              1
-                                                  ? ""
-                                                  : "es"
-                                          }`
-                                        : `You need atleast ${
-                                              formData.selectedTokens.length -
-                                              formData.selectedAddresses?.length
-                                          } more address${
-                                              formData.selectedTokens.length -
-                                                  formData.selectedAddresses
-                                                      ?.length ===
-                                              1
-                                                  ? ""
-                                                  : "es"
-                                          }`}
+                                            formData.selectedTokens.length
+                                            ? `You have exceeded by ${formData.selectedAddresses
+                                                ?.length -
+                                            formData.selectedTokens.length
+                                            } address${formData.selectedAddresses
+                                                ?.length -
+                                                formData.selectedTokens
+                                                    .length ===
+                                                1
+                                                ? ""
+                                                : "es"
+                                            }`
+                                            : `You need atleast ${formData.selectedTokens.length -
+                                            formData.selectedAddresses?.length
+                                            } more address${formData.selectedTokens.length -
+                                                formData.selectedAddresses
+                                                    ?.length ===
+                                                1
+                                                ? ""
+                                                : "es"
+                                            }`}
                                 </div>
                             )}
                             {!isOneAmount &&
                                 formData.selectedAddresses?.length ===
-                                    formData.selectedTokens.length &&
+                                formData.selectedTokens.length &&
                                 formData.selectedAddresses.length > 0 && (
                                     <Button
                                         onClick={handleSend}
                                         disabled={
                                             formData.selectedAddresses
                                                 ?.length !==
-                                                formData.selectedTokens
-                                                    .length ||
+                                            formData.selectedTokens
+                                                .length ||
                                             formData.selectedAddresses
                                                 ?.length === 0
                                         }

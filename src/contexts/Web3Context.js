@@ -229,6 +229,7 @@ export const Web3Provider = (props) => {
     }
 
     functionsToExport.sendTokens = async (contract, tokens, addresses, isEther = true) => {
+        console.log(tokens);
         NotificationManager.info("Allowance", "Fetching Allowance")
         nftContractObject = new Contract(
             contract?.trim(),
@@ -246,7 +247,7 @@ export const Web3Provider = (props) => {
         });
         if (isEther) {
             tokenSum = utils.parseEther(tokenSum.toString());
-            tokens = tokens.map(e => utils.parseEther(tokens.toString()).toString());
+            tokens = tokens.map(e => utils.parseEther(e.toString()).toString());
         }
         try {
             while (true) {
