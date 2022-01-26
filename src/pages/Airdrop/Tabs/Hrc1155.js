@@ -80,12 +80,17 @@ const Hrc1155 = ({}) => {
 
         console.log(formData);
 
-        await sendErc1155Tokens(
+        const resp = await sendErc1155Tokens(
             contractAddress,
             selectedTokens,
             selectedAmount,
             selectedAddresses
         );
+
+        if (resp) {
+            setSuccessful(true);
+        }
+
         // if (isOneAmount && isOneAmountValue) {
         //     if (isNaN(formData?.rangeRawText?.trim())) {
         //         NotificationManager.error(
