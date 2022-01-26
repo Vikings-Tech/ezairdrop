@@ -36,8 +36,9 @@ const defaultForm = {
     selectedAddresses: [],
 };
 
-const Hrc1155 = ({ }) => {
-    const { account, balanceOf, sendErc1155Tokens, setApprovalForContract } = useContext(Web3Context);
+const Hrc1155 = ({}) => {
+    const { account, balanceOf, sendErc1155Tokens, setApprovalForContract } =
+        useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
     const [verifyToken, setVerifyToken] = useState();
     const [refreshTokenLoad, setRefreshTokenLoad] = useState(false);
@@ -70,8 +71,21 @@ const Hrc1155 = ({ }) => {
         setLoadingVerify(false);
     };
     const handleSend = async () => {
-        const { contractAddress, selectedTokens, selectedAmount, selectedAddresses } = formData;
-        await sendErc1155Tokens(contractAddress, selectedTokens, selectedAmount, selectedAddresses);
+        const {
+            contractAddress,
+            selectedTokens,
+            selectedAmount,
+            selectedAddresses,
+        } = formData;
+
+        console.log(formData);
+
+        await sendErc1155Tokens(
+            contractAddress,
+            selectedTokens,
+            selectedAmount,
+            selectedAddresses
+        );
         // if (isOneAmount && isOneAmountValue) {
         //     if (isNaN(formData?.rangeRawText?.trim())) {
         //         NotificationManager.error(
@@ -188,6 +202,13 @@ const Hrc1155 = ({ }) => {
         setLoadingVerify(false);
     };
 
+    const ButtonDisabled =
+        (!isOneAmount || !isOneAmountValue) &&
+        (formData.selectedTokens.length !== formData.selectedAddresses.length ||
+            formData.selectedAmount.length !==
+                formData.selectedAddresses.length ||
+            formData.selectedAmount.length !== formData.selectedTokens.length);
+
     return (
         <>
             {account ? (
@@ -198,25 +219,29 @@ const Hrc1155 = ({ }) => {
                     py={{ base: 20, md: 28 }}
                     px={{ base: 20, md: 28 }}
                 >
-
-                    <Text fontSize={'4xl'}>Airdrop</Text>
+                    <Text fontSize={"4xl"}>Airdrop</Text>
 
                     <div>
-                        Note - Current contract is only in it's beta stage and we will be
-                        observing community use and modify and release a new contract based
-                        on that. Make sure you only use the contract with our webpage and do
-                        not have a contract dependency on it. Developers hold the right to
+                        Note - Current contract is only in it's beta stage and
+                        we will be observing community use and modify and
+                        release a new contract based on that. Make sure you only
+                        use the contract with our webpage and do not have a
+                        contract dependency on it. Developers hold the right to
                         pause all of it's functionality at any point.
                     </div>
-                    <Text fontSize={'2xl'}>Enter Contract Address(HRC1155)</Text>
+                    <Text fontSize={"2xl"}>
+                        Enter Contract Address(HRC1155)
+                    </Text>
                     <Input
                         value={formData.contractAddress}
-                        onChange={e => handleChange('contractAddress', e.target.value)}
+                        onChange={(e) =>
+                            handleChange("contractAddress", e.target.value)
+                        }
                         placeholder="Enter Contract Address"
                         size="lg"
                         disabled={verifyToken}
                     />
-                    <Flex align={'center'}>
+                    <Flex align={"center"}>
                         {loadingVerify && (
                             <Spinner
                                 mr={4}
@@ -231,17 +256,17 @@ const Hrc1155 = ({ }) => {
                             onClick={handleAuthorize}
                             mr={2}
                             disabled={verifyToken || loadingVerify}
-                            display={{ base: 'none', md: 'inline-flex' }}
-                            fontSize={'sm'}
+                            display={{ base: "none", md: "inline-flex" }}
+                            fontSize={"sm"}
                             fontWeight={600}
-                            color={'white'}
-                            bg={'pink.400'}
-                            href={'#'}
+                            color={"white"}
+                            bg={"pink.400"}
+                            href={"#"}
                             _hover={{
-                                bg: 'pink.300',
+                                bg: "pink.300",
                             }}
                         >
-                            {verifyToken ? 'Verified' : 'Verify'}
+                            {verifyToken ? "Verified" : "Verify"}
                         </Button>
                         <Tooltip
                             label="To ensure the contract address is valid and sufficient balance is present"
@@ -253,22 +278,22 @@ const Hrc1155 = ({ }) => {
                         </Tooltip>
                     </Flex>
 
-                    {
-                        // verifyToken &&
+                    {verifyToken && (
                         <>
-
                             <Box>
                                 <Text fontSize={20} textAlign={"left"} mb={5}>
                                     Enter Token Ids:
                                 </Text>
                                 <Input
                                     value={formData.rangeRawText}
-                                    onChange={(e) =>
-                                        handleChange(
-                                            "rangeRawText",
-                                            e.target.value
-                                        )
-                                    }
+                                    onChange={(e) => {
+                                        if (!isOneAmount) {
+                                            handleChange(
+                                                "rangeRawText",
+                                                e.target.value
+                                            );
+                                        }
+                                    }}
                                     w={"80vw"}
                                     placeholder="Enter a range for token IDs ex: 1-5,5-25 or individually 2,3,5"
                                 />
@@ -285,9 +310,23 @@ const Hrc1155 = ({ }) => {
                             </Text>
 
                             <Checkbox
-                                onChange={(e) =>
-                                    setIsOneAmount(e.target.checked)
-                                }
+                                onChange={(e) => {
+                                    setIsOneAmount(e.target.checked);
+
+                                    const addressLength =
+                                        formData.selectedAddresses.length;
+
+                                    if (e.target.checked) {
+                                        for (
+                                            let i = 1;
+                                            i < addressLength;
+                                            i++
+                                        ) {
+                                            formData.selectedTokens[i] =
+                                                formData.selectedTokens[0];
+                                        }
+                                    }
+                                }}
                                 isChecked={isOneAmount}
                             >
                                 Send same value to all addresses(If selected,
@@ -302,12 +341,14 @@ const Hrc1155 = ({ }) => {
                                 <Input
                                     w={"80vw"}
                                     value={formData.rawSelectedAmount}
-                                    onChange={(e) =>
-                                        handleChange(
-                                            "rawSelectedAmount",
-                                            e.target.value
-                                        )
-                                    }
+                                    onChange={(e) => {
+                                        if (!isOneAmountValue) {
+                                            handleChange(
+                                                "rawSelectedAmount",
+                                                e.target.value
+                                            );
+                                        }
+                                    }}
                                     placeholder="Enter comma seperated amounts"
                                     size="lg"
                                 />
@@ -324,9 +365,29 @@ const Hrc1155 = ({ }) => {
                             </Text>
 
                             <Checkbox
-                                onChange={(e) =>
-                                    setIsOneAmountValue(e.target.checked)
-                                }
+                                onChange={(e) => {
+                                    setIsOneAmountValue(e.target.checked);
+
+                                    const addressLength =
+                                        formData.selectedAddresses.length;
+                                    const amountLength =
+                                        formData.selectedAmount.length;
+
+                                    for (let i = 1; i < addressLength; i++) {
+                                        formData.selectedAmount[i] =
+                                            formData.selectedAmount[0];
+                                    }
+
+                                    if (
+                                        e.target.checked &&
+                                        amountLength > addressLength
+                                    ) {
+                                        formData.selectedAmount.splice(
+                                            addressLength,
+                                            amountLength - addressLength
+                                        );
+                                    }
+                                }}
                                 isChecked={isOneAmountValue}
                             >
                                 Send same amount to all addresses(If selected,
@@ -351,68 +412,179 @@ const Hrc1155 = ({ }) => {
                                 />
                             </Box>
                             <div>
-                                <Text mt={10} fontSize={20} color={"green.400"}>
-                                    {formData.selectedAddresses?.length ===
-                                        formData.selectedTokens.length &&
-                                        formData.selectedAmount.length ===
-                                        formData.selectedTokens.length &&
-                                        "Looks Good"}
-                                </Text>
+                                {
+                                    <span>
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"green.400"}
+                                        >
+                                            {formData.selectedAddresses
+                                                ?.length !== 0 &&
+                                                formData.selectedTokens
+                                                    .length !== 0 &&
+                                                formData.selectedAmount
+                                                    .length !== 0 &&
+                                                ((formData.selectedAddresses
+                                                    ?.length ===
+                                                    formData.selectedTokens
+                                                        .length &&
+                                                    formData.selectedAmount
+                                                        .length ===
+                                                        formData.selectedTokens
+                                                            .length) ||
+                                                    (formData.selectedAddresses
+                                                        ?.length ===
+                                                        formData.selectedTokens
+                                                            .length &&
+                                                        isOneAmountValue) ||
+                                                    (formData.selectedAddresses
+                                                        ?.length ===
+                                                        formData.selectedAmount
+                                                            .length &&
+                                                        isOneAmount) ||
+                                                    (formData.selectedAddresses
+                                                        ?.length >= 0 &&
+                                                        formData.selectedAmount
+                                                            .length !== 0 &&
+                                                        formData.selectedTokens
+                                                            .length !== 0 &&
+                                                        isOneAmount &&
+                                                        isOneAmountValue)) &&
+                                                "Looks Good"}
+                                        </Text>
 
-                                <Text mt={10} fontSize={20} color={"red.400"}>
-                                    {formData.selectedAmount.length >
-                                        formData.selectedTokens.length &&
-                                        `You have exceeded by ${formData.selectedAmount.length -
-                                        formData.selectedTokens.length
-                                        } value${formData.selectedAmount.length -
-                                            formData.selectedTokens
-                                                .length ===
-                                            1
-                                            ? ""
-                                            : "s"
-                                        } for amount`}
-                                </Text>
-                                <Text mt={10} fontSize={20} color={"red.400"}>
-                                    {formData.selectedAmount.length <
-                                        formData.selectedTokens.length &&
-                                        `You need atleast ${formData.selectedTokens.length -
-                                        formData.selectedAmount.length
-                                        } more value${formData.selectedTokens.length -
-                                            formData.selectedAmount
-                                                ?.length ===
-                                            1
-                                            ? ""
-                                            : "s"
-                                        } for amount`}
-                                </Text>
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"red.400"}
+                                        >
+                                            {formData.selectedAddresses
+                                                ?.length === 0 &&
+                                                formData.selectedTokens
+                                                    .length === 0 &&
+                                                formData.selectedAmount
+                                                    .length === 0 &&
+                                                "Input Fields Empty"}
+                                        </Text>
 
-                                <Text mt={10} fontSize={20} color={"red.400"}>
-                                    {formData.selectedAddresses?.length >
-                                        formData.selectedTokens.length &&
-                                        `You have exceeded by ${formData.selectedAddresses?.length -
-                                        formData.selectedTokens.length
-                                        } address${formData.selectedAddresses?.length -
-                                            formData.selectedTokens
-                                                .length ===
-                                            1
-                                            ? ""
-                                            : "es"
-                                        }`}
-                                </Text>
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"red.400"}
+                                        >
+                                            {isOneAmount &&
+                                                isOneAmountValue &&
+                                                (formData.selectedAmount
+                                                    .length === 0 ||
+                                                    formData.selectedTokens
+                                                        .length === 0) &&
+                                                "You need to specify at least one Token Id and one Amount"}
+                                        </Text>
 
-                                <Text mt={10} fontSize={20} color={"red.400"}>
-                                    {formData.selectedAddresses?.length <
-                                        formData.selectedTokens.length &&
-                                        `You need atleast ${formData.selectedTokens.length -
-                                        formData.selectedAddresses?.length
-                                        } more address${formData.selectedTokens.length -
-                                            formData.selectedAddresses
-                                                ?.length ===
-                                            1
-                                            ? ""
-                                            : "es"
-                                        }`}
-                                </Text>
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"red.400"}
+                                        >
+                                            {!isOneAmount &&
+                                                formData.selectedAmount.length >
+                                                    formData.selectedAddresses
+                                                        .length &&
+                                                `You have exceeded by ${
+                                                    formData.selectedAmount
+                                                        .length -
+                                                    formData.selectedTokens
+                                                        .length
+                                                } value${
+                                                    formData.selectedAmount
+                                                        .length -
+                                                        formData.selectedTokens
+                                                            .length ===
+                                                    1
+                                                        ? ""
+                                                        : "s"
+                                                } for amount`}
+                                        </Text>
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"red.400"}
+                                        >
+                                            {!isOneAmountValue &&
+                                                formData.selectedAmount.length <
+                                                    formData.selectedTokens
+                                                        .length &&
+                                                `You need atleast ${
+                                                    formData.selectedTokens
+                                                        .length -
+                                                    formData.selectedAmount
+                                                        .length
+                                                } more value${
+                                                    formData.selectedTokens
+                                                        .length -
+                                                        formData.selectedAmount
+                                                            ?.length ===
+                                                    1
+                                                        ? ""
+                                                        : "s"
+                                                } for amount`}
+                                        </Text>
+
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"red.400"}
+                                        >
+                                            {(!isOneAmount ||
+                                                !isOneAmountValue) &&
+                                                formData.selectedAddresses
+                                                    ?.length >
+                                                    formData.selectedTokens
+                                                        .length &&
+                                                `You have exceeded by ${
+                                                    formData.selectedAddresses
+                                                        ?.length -
+                                                    formData.selectedTokens
+                                                        .length
+                                                } address${
+                                                    formData.selectedAddresses
+                                                        ?.length -
+                                                        formData.selectedTokens
+                                                            .length ===
+                                                    1
+                                                        ? ""
+                                                        : "es"
+                                                }`}
+                                        </Text>
+
+                                        <Text
+                                            mt={10}
+                                            fontSize={20}
+                                            color={"red.400"}
+                                        >
+                                            {formData.selectedAddresses
+                                                ?.length <
+                                                formData.selectedTokens
+                                                    .length &&
+                                                `You need atleast ${
+                                                    formData.selectedTokens
+                                                        .length -
+                                                    formData.selectedAddresses
+                                                        ?.length
+                                                } more address${
+                                                    formData.selectedTokens
+                                                        .length -
+                                                        formData
+                                                            .selectedAddresses
+                                                            ?.length ===
+                                                    1
+                                                        ? ""
+                                                        : "es"
+                                                }`}
+                                        </Text>
+                                    </span>
+                                }
                             </div>
                             <VStack>
                                 <Text
@@ -427,51 +599,47 @@ const Hrc1155 = ({ }) => {
                                     addresses={formData.selectedAddresses}
                                     tokenIds={formData.selectedTokens}
                                     amounts={formData.selectedAmount}
+                                    isOneAmount={isOneAmount}
+                                    isOneAmountValue={isOneAmountValue}
                                 />
                             </VStack>
-                            {
-                                formData.rawSelectedAmount && (
-                                    <Button
-                                        onClick={handleSend}
-
-                                        display={{
-                                            base: "none",
-                                            md: "inline-flex",
-                                        }}
-                                        fontSize={"sm"}
-                                        fontWeight={600}
-                                        color={"white"}
-                                        bg={"pink.400"}
-                                        href={"#"}
-                                        _hover={{
-                                            bg: "pink.300",
-                                        }}
-                                    >
-                                        {send}
-                                    </Button>
-                                )}
+                            {formData.rawSelectedAmount && (
+                                <Button
+                                    onClick={handleSend}
+                                    display={{
+                                        base: "none",
+                                        md: "inline-flex",
+                                    }}
+                                    fontSize={"sm"}
+                                    fontWeight={600}
+                                    color={"white"}
+                                    bg={"pink.400"}
+                                    href={"#"}
+                                    _hover={{
+                                        bg: "pink.300",
+                                    }}
+                                    disabled={ButtonDisabled}
+                                >
+                                    {send}
+                                </Button>
+                            )}
                         </>
-                    }
-                    {
-                        //verifyToken
-                        successful && (
-                            <>
-                                <Text fontSize={"4xl"}>
-                                    Transaction Successful
-                                </Text>
-                                <Link to="/donate">
-                                    <Button
-                                        bg={"pink.400"}
-                                        color={"white"}
-                                        rounded={"full"}
-                                        px={6}
-                                    >
-                                        Consider Donating!
-                                    </Button>
-                                </Link>
-                            </>
-                        )
-                    }
+                    )}
+                    {verifyToken && successful && (
+                        <>
+                            <Text fontSize={"4xl"}>Transaction Successful</Text>
+                            <Link to="/donate">
+                                <Button
+                                    bg={"pink.400"}
+                                    color={"white"}
+                                    rounded={"full"}
+                                    px={6}
+                                >
+                                    Consider Donating!
+                                </Button>
+                            </Link>
+                        </>
+                    )}
                 </Stack>
             ) : (
                 <Center height={"80vh"}>
