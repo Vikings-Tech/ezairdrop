@@ -12,7 +12,13 @@ import {
     EditablePreview,
 } from "@chakra-ui/react";
 
-function TableNormal({ addresses, tokenIds, isOneAddress }) {
+function TableNormal({
+    addresses,
+    tokenIds,
+    isOneAddress,
+    isOneAmount,
+    ishrc20,
+}) {
     let addressNum = addresses.length;
     let tokenNum = tokenIds.length;
 
@@ -33,6 +39,12 @@ function TableNormal({ addresses, tokenIds, isOneAddress }) {
         });
     }
 
+    if (isOneAmount) {
+        finalTable.map((tableRow) => {
+            tableRow.tokenId = tokenIds[0];
+        });
+    }
+
     // if (isOneAmountValue) {
     //     finalTable.map((tableRow) => {
     //         tableRow.amount = amounts[0];
@@ -46,7 +58,7 @@ function TableNormal({ addresses, tokenIds, isOneAddress }) {
                     <Tr>
                         <Th w={"40%"}>Addresses</Th>
                         <Th isNumeric pl={0}>
-                            Token Ids
+                            {ishrc20 ? "Amount" : "Token Ids"}
                         </Th>
                     </Tr>
                 </Thead>
