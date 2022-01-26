@@ -16,8 +16,8 @@ import { CheckIcon } from '@chakra-ui/icons';
 const features = [
     { id: 1, title: "Is this project only for airdrop and giveaways ?", text: " No, while it is primarily advertised for those use cases, it can be used for all form of bulk transfers." },
     { id: 2, title: "Do I need to own all the tokens I transfer ?", text: " Yes, currently we only support transfer of tokens owned by the user." },
-    { id: 3, title: "Can I airdrop HRC1155 and HRC20 as well ?", text: "Yes, though we do not have complete support for it yet on our website we are actively working on it." },
-    { id: 3, title: "I need a feature but it's not currently available, anywhere I can suggest new features?", text: "For sure, email us : teamvikingstech@gmail.com" },
+    { id: 3, title: "Which token standards are supported  ?", text: "We support HRC20, HRC721 and HRC1155" },
+    { id: 4, title: "I need a feature but it's not currently available, anywhere I can suggest new features?", text: "For sure, email us : teamvikingstech@gmail.com" },
 ]
 
 export default function FAQ() {

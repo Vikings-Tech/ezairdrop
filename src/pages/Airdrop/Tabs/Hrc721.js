@@ -30,7 +30,7 @@ const defaultForm = {
     selectedAddresses: [],
 };
 
-const Hrc721 = ({}) => {
+const Hrc721 = ({ }) => {
     const { account, setApprovalForContract, getDiscountOptions, sendERC721 } =
         useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
@@ -161,9 +161,9 @@ const Hrc721 = ({}) => {
                     <Stack
                         textAlign={"center"}
                         align={"center"}
-                        spacing={{ base: 8, md: 10 }}
-                        py={{ base: 20, md: 28 }}
-                        px={{ base: 20, md: 28 }}
+                        spacing={{ base: 8 }}
+                        py={{ base: 12 }}
+                        px={{ base: 12 }}
                     >
                         <Text fontSize={"4xl"}>Airdrop</Text>
 
@@ -213,7 +213,7 @@ const Hrc721 = ({}) => {
                                     bg: "pink.300",
                                 }}
                             >
-                                {authorize ? "Approved" : "Approve Contract"}
+                                {authorize ? "Contract Approved" : "Approve Contract"}
                             </Button>
                             <Tooltip
                                 label="To make transfers on your behalf, our contract needs to be approved first."
@@ -310,38 +310,34 @@ const Hrc721 = ({}) => {
                                 {!isOneAddress && (
                                     <div>
                                         {formData.selectedAddresses?.length ===
-                                        formData.selectedTokens.length
+                                            formData.selectedTokens.length
                                             ? "Looks Good!"
                                             : formData.selectedAddresses
-                                                  ?.length >
-                                              formData.selectedTokens.length
-                                            ? `You have exceeded by ${
-                                                  formData.selectedAddresses
-                                                      ?.length -
-                                                  formData.selectedTokens.length
-                                              } address${
-                                                  formData.selectedAddresses
-                                                      ?.length -
-                                                      formData.selectedTokens
-                                                          .length ===
-                                                  1
-                                                      ? ""
-                                                      : "es"
-                                              }`
-                                            : `You need atleast ${
-                                                  formData.selectedTokens
-                                                      .length -
-                                                  formData.selectedAddresses
-                                                      ?.length
-                                              } more address${
-                                                  formData.selectedTokens
-                                                      .length -
-                                                      formData.selectedAddresses
-                                                          ?.length ===
-                                                  1
-                                                      ? ""
-                                                      : "es"
-                                              }`}
+                                                ?.length >
+                                                formData.selectedTokens.length
+                                                ? `You have exceeded by ${formData.selectedAddresses
+                                                    ?.length -
+                                                formData.selectedTokens.length
+                                                } address${formData.selectedAddresses
+                                                    ?.length -
+                                                    formData.selectedTokens
+                                                        .length ===
+                                                    1
+                                                    ? ""
+                                                    : "es"
+                                                }`
+                                                : `You need atleast ${formData.selectedTokens
+                                                    .length -
+                                                formData.selectedAddresses
+                                                    ?.length
+                                                } more address${formData.selectedTokens
+                                                    .length -
+                                                    formData.selectedAddresses
+                                                        ?.length ===
+                                                    1
+                                                    ? ""
+                                                    : "es"
+                                                }`}
                                     </div>
                                 )}
 
@@ -355,15 +351,15 @@ const Hrc721 = ({}) => {
 
                                 {!isOneAddress &&
                                     formData.selectedAddresses?.length ===
-                                        formData.selectedTokens.length &&
+                                    formData.selectedTokens.length &&
                                     formData.selectedAddresses.length > 0 && (
                                         <Button
                                             onClick={handleSend}
                                             disabled={
                                                 formData.selectedAddresses
                                                     ?.length !==
-                                                    formData.selectedTokens
-                                                        .length ||
+                                                formData.selectedTokens
+                                                    .length ||
                                                 formData.selectedAddresses
                                                     ?.length === 0
                                             }
