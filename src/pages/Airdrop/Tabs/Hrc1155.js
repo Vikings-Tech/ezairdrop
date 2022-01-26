@@ -315,6 +315,8 @@ const Hrc1155 = ({}) => {
 
                                     const addressLength =
                                         formData.selectedAddresses.length;
+                                    const tokenLength =
+                                        formData.selectedTokens.length;
 
                                     if (e.target.checked) {
                                         for (
@@ -325,6 +327,23 @@ const Hrc1155 = ({}) => {
                                             formData.selectedTokens[i] =
                                                 formData.selectedTokens[0];
                                         }
+                                    }
+
+                                    if (
+                                        e.target.checked &&
+                                        tokenLength > addressLength
+                                    ) {
+                                        formData.selectedTokens.splice(
+                                            addressLength,
+                                            tokenLength - addressLength
+                                        );
+                                    }
+
+                                    if (!e.target.checked) {
+                                        handleChange(
+                                            "rangeRawText",
+                                            formData.rangeRawText
+                                        );
                                     }
                                 }}
                                 isChecked={isOneAmount}
@@ -373,9 +392,15 @@ const Hrc1155 = ({}) => {
                                     const amountLength =
                                         formData.selectedAmount.length;
 
-                                    for (let i = 1; i < addressLength; i++) {
-                                        formData.selectedAmount[i] =
-                                            formData.selectedAmount[0];
+                                    if (e.target.checked) {
+                                        for (
+                                            let i = 1;
+                                            i < addressLength;
+                                            i++
+                                        ) {
+                                            formData.selectedAmount[i] =
+                                                formData.selectedAmount[0];
+                                        }
                                     }
 
                                     if (
@@ -385,6 +410,13 @@ const Hrc1155 = ({}) => {
                                         formData.selectedAmount.splice(
                                             addressLength,
                                             amountLength - addressLength
+                                        );
+                                    }
+
+                                    if (!e.target.checked) {
+                                        handleChange(
+                                            "rawSelectedAmount",
+                                            formData.rawSelectedAmount
                                         );
                                     }
                                 }}
