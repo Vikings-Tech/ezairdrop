@@ -215,7 +215,10 @@ export const Web3Provider = (props) => {
                 erc20Contract,
                 signer
             );
-            return utils.formatEther(await nftContractObject.balanceOf(account));
+            const result = await nftContractObject.balanceOf(account);
+            console.log(result.toString())
+            console.log(utils.formatEther(result))
+            return utils.formatEther(result);
         }
         catch (e) {
             console.log(e)
@@ -225,7 +228,7 @@ export const Web3Provider = (props) => {
 
     }
 
-    functionsToExport.sendTokens = async (contract, tokens, addresses) => {
+    functionsToExport.sendTokens = async (contract, tokens, addresses, isEther = true) => {
         NotificationManager.info("Allowance", "Fetching Allowance")
         nftContractObject = new Contract(
             contract?.trim(),
@@ -233,22 +236,40 @@ export const Web3Provider = (props) => {
             signer
         );
         let tokenSum = 0;
-        tokens.map(e => { tokenSum += parseFloat(e) });
-        tokenSum = utils.parseEther(tokenSum.toString());
+        tokens.map(e => {
+            if (isEther) {
+                tokenSum += parseFloat(e)
+            }
+            else {
+                tokenSum += parseInt(e)
+            }
+        });
+        if (isEther) {
+            tokenSum = utils.parseEther(tokenSum.toString());
+            tokens = tokens.map(e => utils.parseEther(tokens.toString()).toString());
+        }
         try {
             while (true) {
-                const allowance = await nftContractObject.allowance(account, selectedNetwork.OUR_ADDRESS)
-                if (allowance >= tokenSum) {
+                let allowance = await nftContractObject.allowance(account, selectedNetwork.OUR_ADDRESS)
+                console.log(allowance.toString())
+                if (allowance.sub(tokenSum).lt(0)) {
+                    console.log(tokenSum);
+                    console.log(allowance);
+                    NotificationManager.info("Allowance", `Requesting to increase allowance by:${tokenSum - allowance} wei`)
+                    const increaseAllowance = await nftContractObject.increaseAllowance(selectedNetwork.OUR_ADDRESS, tokenSum.sub(allowance).toString());
+                    NotificationManager.info("Allowance", "Transaction Placed!")
+
+                    const result = await increaseAllowance.wait()
+                    NotificationManager.info("Allowance", "Allowance Increased!")
+                    allowance = await nftContractObject.allowance(account, selectedNetwork.OUR_ADDRESS)
+                    console.log(allowance.toString())
+                }
+                else {
                     break;
                 }
-                console.log(tokenSum);
-                console.log(allowance);
-                NotificationManager.info("Allowance", `Requesting to increase allowance by:${tokenSum - allowance}`)
-
-                const increaseAllowance = await nftContractObject.increaseAllowance(selectedNetwork.OUR_ADDRESS, (tokenSum - allowance).toString());
-
-
             }
+
+
 
         } catch (e) {
             console.log(e);
@@ -262,13 +283,17 @@ export const Web3Provider = (props) => {
                 airdropContract,
                 signer
             );
+            NotificationManager.info("Transaction", "Initiating Transaction!")
+
             const transaction = await airdropContractObject.airDrop20(contract, tokens, addresses, { value: utils.parseEther("1") });
+            NotificationManager.info("Transaction", "Transaction placed!")
             const result = await transaction.wait()
-            NotificationManager.info("Transaction", "Transaction Successful!")
+            NotificationManager.success("Transaction", "Transaction Successful!")
             return true;
 
         }
         catch (e) {
+            console.log(e)
             NotificationManager.info("Transaction", "Transaction Failed, Try again!")
             return false;
         }
