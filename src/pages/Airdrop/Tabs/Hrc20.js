@@ -20,6 +20,7 @@ import {
     NotificationContainer,
     NotificationManager,
 } from "react-notifications";
+import TableNormal from "../../../components/Table/Table_20_721";
 const defaultForm = {
     contractAddress: "",
     rangeRawText: "",
@@ -314,6 +315,14 @@ const Hrc20 = ({ }) => {
                                             }`}
                                 </div>
                             )}
+
+                            <TableNormal
+                                tokenIds={formData.selectedTokens}
+                                addresses={formData.selectedAddresses}
+                                isOneAmount={isOneAmount}
+                                ishrc20
+                            />
+
                             {!isOneAmount &&
                                 formData.selectedAddresses?.length ===
                                 formData.selectedTokens.length &&
