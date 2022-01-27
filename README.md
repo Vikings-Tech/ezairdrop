@@ -15,4 +15,4 @@ Users can now bulk send tokens in giveaways. Currently HRC20, HRC721 and HRC1155
 
 ---
 
-If you want to add a feature or report a bug, create a new issue (here)[https://github.com/Vikings-Tech/ezairdrop/issues/new]
+If you want to add a feature or report a bug, create a new issue [here](https://github.com/Vikings-Tech/ezairdrop/issues/new)
