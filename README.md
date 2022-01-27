@@ -12,5 +12,5 @@ Users can now bulk send tokens in giveaways. Currently HRC20, HRC721 and HRC1155
 
 ## What's Next for Airdrop
 
-- []  Improve UI/UX and add more features
-- [] Add support for more chains
+[ ]  Improve UI/UX and add more features
+[ ] Add support for more chains
