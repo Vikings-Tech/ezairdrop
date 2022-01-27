@@ -1,4 +1,4 @@
-<h1 aligh="center">Airdrop by Eztools</h1>
+<h1 align="center">Airdrop by Eztools</h1>
 
 ---
 
