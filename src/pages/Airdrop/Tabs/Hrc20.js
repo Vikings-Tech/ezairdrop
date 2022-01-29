@@ -615,26 +615,125 @@ const Hrc20 = ({}) => {
                                             <ModalBody>Hmm HRC20</ModalBody>
 
                                             <ModalFooter>
-                                                <Button
-                                                    onClick={handleSend}
-                                                    disabled={isNaN(
-                                                        formData?.rangeRawText
-                                                    )}
-                                                    display={{
-                                                        base: "none",
-                                                        md: "inline-flex",
-                                                    }}
-                                                    fontSize={"sm"}
-                                                    fontWeight={600}
-                                                    color={"white"}
-                                                    bg={"pink.400"}
-                                                    href={"#"}
-                                                    _hover={{
-                                                        bg: "pink.300",
-                                                    }}
-                                                >
-                                                    {send}
-                                                </Button>
+                                                <VStack spacing={10} mb={10}>
+                                                    <HStack
+                                                        spacing={10}
+                                                        justifyContent={
+                                                            "space-between"
+                                                        }
+                                                    >
+                                                        <Flex
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={30}>
+                                                                {
+                                                                    formData
+                                                                        .selectedAddresses
+                                                                        .length
+                                                                }
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "left"
+                                                                }
+                                                                maxW={"13vw"}
+                                                            >
+                                                                Total Number of
+                                                                Addresses
+                                                            </Text>
+                                                        </Flex>
+                                                        <Flex
+                                                            textAlign="right"
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={30}>
+                                                                {formData.totalSelectedTokens *
+                                                                    formData
+                                                                        .selectedAddresses
+                                                                        .length}
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                maxW={"13vw"}
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "left"
+                                                                }
+                                                            >
+                                                                Total number of
+                                                                Tokens to be
+                                                                Sent
+                                                            </Text>
+                                                        </Flex>
+                                                    </HStack>
+                                                    <HStack
+                                                        spacing={10}
+                                                        justifyContent={
+                                                            "space-between"
+                                                        }
+                                                    >
+                                                        <Flex
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={26}>
+                                                                2
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                maxW={"10vw"}
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "left"
+                                                                }
+                                                            >
+                                                                Total Number of
+                                                                Transactions
+                                                                Needed
+                                                            </Text>
+                                                        </Flex>
+                                                        <Flex
+                                                            textAlign="right"
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={26}>
+                                                                1 ONE + gas
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                maxW={"13vw"}
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "left"
+                                                                }
+                                                            >
+                                                                Approximate Cost
+                                                                of Operations
+                                                            </Text>
+                                                        </Flex>
+                                                    </HStack>
+                                                    <Text color={"yellow.400"}>
+                                                        *We charge a convenience
+                                                        fee of 1 ONE
+                                                    </Text>
+                                                </VStack>
                                             </ModalFooter>
                                         </ModalContent>
                                     </Modal>
