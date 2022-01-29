@@ -622,28 +622,233 @@ const Hrc721 = ({}) => {
                                     )}
 
                                 {isOneAddress && formData.rawSelectedAddresses && (
-                                    <Button
-                                        onClick={handleSend}
-                                        disabled={
-                                            !utils.isAddress(
-                                                formData?.rawSelectedAddresses
-                                            )
-                                        }
-                                        display={{
-                                            base: "none",
-                                            md: "inline-flex",
-                                        }}
-                                        fontSize={"sm"}
-                                        fontWeight={600}
-                                        color={"white"}
-                                        bg={"pink.400"}
-                                        href={"#"}
-                                        _hover={{
-                                            bg: "pink.300",
-                                        }}
-                                    >
-                                        {send}
-                                    </Button>
+                                    <span>
+                                        <Button
+                                            onClick={onOpen}
+                                            disabled={
+                                                !utils.isAddress(
+                                                    formData?.rawSelectedAddresses
+                                                )
+                                            }
+                                            display={{
+                                                base: "none",
+                                                md: "inline-flex",
+                                            }}
+                                            fontSize={"sm"}
+                                            fontWeight={600}
+                                            color={"white"}
+                                            bg={"pink.400"}
+                                            href={"#"}
+                                            _hover={{
+                                                bg: "pink.300",
+                                            }}
+                                        >
+                                            Summary
+                                        </Button>
+                                        <Modal
+                                            closeOnOverlayClick={false}
+                                            isOpen={isOpen}
+                                            onClose={onClose}
+                                        >
+                                            <ModalOverlay />
+                                            <ModalContent>
+                                                <ModalHeader>
+                                                    Summary
+                                                </ModalHeader>
+                                                <ModalCloseButton />
+                                                <ModalBody>
+                                                    <VStack
+                                                        spacing={10}
+                                                        mb={10}
+                                                    >
+                                                        <HStack
+                                                            spacing={10}
+                                                            justifyContent={
+                                                                "space-between"
+                                                            }
+                                                        >
+                                                            <Flex
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        30
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        formData
+                                                                            .selectedAddresses
+                                                                            .length
+                                                                    }
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                    maxW={
+                                                                        "13vw"
+                                                                    }
+                                                                >
+                                                                    Total Number
+                                                                    of Addresses
+                                                                </Text>
+                                                            </Flex>
+                                                            <Flex
+                                                                textAlign="right"
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        30
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        formData
+                                                                            .selectedTokens
+                                                                            .length
+                                                                    }
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    maxW={
+                                                                        "13vw"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                >
+                                                                    Total number
+                                                                    of Tokens to
+                                                                    be Sent
+                                                                </Text>
+                                                            </Flex>
+                                                        </HStack>
+                                                        <HStack
+                                                            spacing={10}
+                                                            justifyContent={
+                                                                "space-between"
+                                                            }
+                                                        >
+                                                            <Flex
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        26
+                                                                    }
+                                                                >
+                                                                    1
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    maxW={
+                                                                        "10vw"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                >
+                                                                    Total Number
+                                                                    of
+                                                                    Transactions
+                                                                    Needed
+                                                                </Text>
+                                                            </Flex>
+                                                            <Flex
+                                                                textAlign="right"
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        26
+                                                                    }
+                                                                >
+                                                                    1 ONE + gas
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    maxW={
+                                                                        "13vw"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                >
+                                                                    Approximate
+                                                                    Cost of
+                                                                    Operations
+                                                                </Text>
+                                                            </Flex>
+                                                        </HStack>
+                                                        <Text
+                                                            color={"yellow.400"}
+                                                        >
+                                                            *We charge a
+                                                            convenience fee of 1
+                                                            ONE
+                                                        </Text>
+                                                    </VStack>
+                                                </ModalBody>
+
+                                                <ModalFooter
+                                                    justifyContent={"center"}
+                                                >
+                                                    <Button
+                                                        mb={5}
+                                                        onClick={handleSend}
+                                                        disabled={
+                                                            !utils.isAddress(
+                                                                formData?.rawSelectedAddresses
+                                                            )
+                                                        }
+                                                        display={{
+                                                            base: "none",
+                                                            md: "inline-flex",
+                                                        }}
+                                                        fontSize={"sm"}
+                                                        fontWeight={600}
+                                                        color={"white"}
+                                                        bg={"pink.400"}
+                                                        href={"#"}
+                                                        _hover={{
+                                                            bg: "pink.300",
+                                                        }}
+                                                    >
+                                                        {send}
+                                                    </Button>
+                                                </ModalFooter>
+                                            </ModalContent>
+                                        </Modal>
+                                    </span>
                                 )}
                             </>
                         )}
