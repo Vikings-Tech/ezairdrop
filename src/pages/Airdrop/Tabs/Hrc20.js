@@ -1,6 +1,5 @@
 import {
     Button,
-    Box,
     Input,
     Text,
     Stack,
@@ -225,7 +224,9 @@ const Hrc20 = ({}) => {
                                 bg: "pink.300",
                             }}
                         >
-                            {verifyToken ? "Contract Approved" : "Approve Contract"}
+                            {verifyToken
+                                ? "Contract Approved"
+                                : "Approve Contract"}
                         </Button>
                         <Tooltip
                             label="To ensure the contract address is valid and sufficient balance is present"
