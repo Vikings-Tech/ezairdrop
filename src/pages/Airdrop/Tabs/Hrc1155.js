@@ -740,11 +740,11 @@ const Hrc1155 = ({}) => {
                                                             }
                                                         >
                                                             <Text fontSize={30}>
-                                                                {
-                                                                    formData
-                                                                        .selectedTokens
-                                                                        .length
-                                                                }
+                                                                {isOneAmount
+                                                                    ? "1"
+                                                                    : formData
+                                                                          .selectedTokens
+                                                                          .length}
                                                             </Text>
                                                             <Text
                                                                 color={
