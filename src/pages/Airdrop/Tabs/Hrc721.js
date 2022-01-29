@@ -41,7 +41,11 @@ const defaultForm = {
 };
 
 const Hrc721 = ({}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: is721Open,
+        onOpen: on721Open,
+        onClose: on721Close,
+    } = useDisclosure();
 
     const { account, setApprovalForContract, getDiscountOptions, sendERC721 } =
         useContext(Web3Context);
@@ -373,7 +377,7 @@ const Hrc721 = ({}) => {
                                     formData.selectedAddresses.length > 0 && (
                                         <span>
                                             <Button
-                                                onClick={onOpen}
+                                                onClick={on721Open}
                                                 disabled={
                                                     formData.selectedAddresses
                                                         ?.length !==
@@ -399,8 +403,8 @@ const Hrc721 = ({}) => {
                                             </Button>
                                             <Modal
                                                 closeOnOverlayClick={false}
-                                                isOpen={isOpen}
-                                                onClose={onClose}
+                                                isOpen={is721Open}
+                                                onClose={on721Close}
                                             >
                                                 <ModalOverlay />
                                                 <ModalContent>
@@ -624,7 +628,7 @@ const Hrc721 = ({}) => {
                                 {isOneAddress && formData.rawSelectedAddresses && (
                                     <span>
                                         <Button
-                                            onClick={onOpen}
+                                            onClick={on721Open}
                                             disabled={
                                                 !utils.isAddress(
                                                     formData?.rawSelectedAddresses
@@ -647,8 +651,8 @@ const Hrc721 = ({}) => {
                                         </Button>
                                         <Modal
                                             closeOnOverlayClick={false}
-                                            isOpen={isOpen}
-                                            onClose={onClose}
+                                            isOpen={is721Open}
+                                            onClose={on721Close}
                                         >
                                             <ModalOverlay />
                                             <ModalContent>
@@ -805,7 +809,7 @@ const Hrc721 = ({}) => {
                                                                 >
                                                                     Approximate
                                                                     Cost of
-                                                                    Operations
+                                                                    Operation
                                                                 </Text>
                                                             </Flex>
                                                         </HStack>
