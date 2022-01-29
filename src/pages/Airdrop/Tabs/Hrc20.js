@@ -1,5 +1,6 @@
 import {
     Button,
+    Box,
     Input,
     Text,
     Stack,
@@ -9,6 +10,16 @@ import {
     Flex,
     Spinner,
     Checkbox,
+    VStack,
+    HStack,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
@@ -31,7 +42,9 @@ const defaultForm = {
     selectedAddresses: [],
 };
 
-const Hrc20 = ({ }) => {
+const Hrc20 = ({}) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     const { account, balanceOf, sendTokens } = useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
     const [verifyToken, setVerifyToken] = useState();
@@ -57,9 +70,11 @@ const Hrc20 = ({ }) => {
                 return;
             }
             setSend("Sending Tokens");
-            console.log(formData.selectedAddresses?.map((e) =>
-                formData?.rangeRawText.toString()
-            ))
+            console.log(
+                formData.selectedAddresses?.map((e) =>
+                    formData?.rangeRawText.toString()
+                )
+            );
             if (
                 await sendTokens(
                     formData.contractAddress,
@@ -252,7 +267,7 @@ const Hrc20 = ({ }) => {
                                 onChange={(e) =>
                                     handleChange("rangeRawText", e.target.value)
                                 }
-                                placeholder="Enter a range for token IDs ex: 1-5,5-25 or individually 2,3,5"
+                                placeholder="Enter a range for amounts ex: 1-5,5-25 or individually 2,3,5"
                                 size="lg"
                             />
                             <div>{formData.selectedTokens?.length}</div>
@@ -289,30 +304,34 @@ const Hrc20 = ({ }) => {
                             {!isOneAmount && (
                                 <div>
                                     {formData.selectedAddresses?.length ===
-                                        formData.selectedTokens.length
+                                    formData.selectedTokens.length
                                         ? "Looks Good!"
                                         : formData.selectedAddresses?.length >
-                                            formData.selectedTokens.length
-                                            ? `You have exceeded by ${formData.selectedAddresses
-                                                ?.length -
-                                            formData.selectedTokens.length
-                                            } address${formData.selectedAddresses
-                                                ?.length -
-                                                formData.selectedTokens
-                                                    .length ===
-                                                1
-                                                ? ""
-                                                : "es"
-                                            }`
-                                            : `You need atleast ${formData.selectedTokens.length -
-                                            formData.selectedAddresses?.length
-                                            } more address${formData.selectedTokens.length -
-                                                formData.selectedAddresses
-                                                    ?.length ===
-                                                1
-                                                ? ""
-                                                : "es"
-                                            }`}
+                                          formData.selectedTokens.length
+                                        ? `You have exceeded by ${
+                                              formData.selectedAddresses
+                                                  ?.length -
+                                              formData.selectedTokens.length
+                                          } address${
+                                              formData.selectedAddresses
+                                                  ?.length -
+                                                  formData.selectedTokens
+                                                      .length ===
+                                              1
+                                                  ? ""
+                                                  : "es"
+                                          }`
+                                        : `You need atleast ${
+                                              formData.selectedTokens.length -
+                                              formData.selectedAddresses?.length
+                                          } more address${
+                                              formData.selectedTokens.length -
+                                                  formData.selectedAddresses
+                                                      ?.length ===
+                                              1
+                                                  ? ""
+                                                  : "es"
+                                          }`}
                                 </div>
                             )}
 
@@ -325,18 +344,250 @@ const Hrc20 = ({ }) => {
 
                             {!isOneAmount &&
                                 formData.selectedAddresses?.length ===
-                                formData.selectedTokens.length &&
+                                    formData.selectedTokens.length &&
                                 formData.selectedAddresses.length > 0 && (
+                                    <span>
+                                        <Button
+                                            // onClick={handleSend}
+                                            onClick={onOpen}
+                                            disabled={
+                                                formData.selectedAddresses
+                                                    ?.length !==
+                                                    formData.selectedTokens
+                                                        .length ||
+                                                formData.selectedAddresses
+                                                    ?.length === 0
+                                            }
+                                            display={{
+                                                base: "none",
+                                                md: "inline-flex",
+                                            }}
+                                            fontSize={"sm"}
+                                            fontWeight={600}
+                                            color={"white"}
+                                            bg={"pink.400"}
+                                            href={"#"}
+                                            _hover={{
+                                                bg: "pink.300",
+                                            }}
+                                        >
+                                            Summary
+                                        </Button>
+                                        <Modal
+                                            closeOnOverlayClick={false}
+                                            isOpen={isOpen}
+                                            onClose={onClose}
+                                        >
+                                            <ModalOverlay />
+                                            <ModalContent>
+                                                <ModalHeader>
+                                                    Summary
+                                                </ModalHeader>
+                                                <ModalCloseButton />
+                                                <ModalBody>
+                                                    <VStack
+                                                        spacing={10}
+                                                        mb={10}
+                                                    >
+                                                        <HStack
+                                                            spacing={10}
+                                                            justifyContent={
+                                                                "space-between"
+                                                            }
+                                                        >
+                                                            <Flex
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        30
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        formData
+                                                                            .selectedAddresses
+                                                                            .length
+                                                                    }
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                    maxW={
+                                                                        "13vw"
+                                                                    }
+                                                                >
+                                                                    Total Number
+                                                                    of Addresses
+                                                                </Text>
+                                                            </Flex>
+                                                            <Flex
+                                                                textAlign="right"
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        30
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        formData.totalSelectedTokens
+                                                                    }
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    maxW={
+                                                                        "13vw"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                >
+                                                                    Total number
+                                                                    of Tokens to
+                                                                    be Sent
+                                                                </Text>
+                                                            </Flex>
+                                                        </HStack>
+                                                        <HStack
+                                                            spacing={10}
+                                                            justifyContent={
+                                                                "space-between"
+                                                            }
+                                                        >
+                                                            <Flex
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        26
+                                                                    }
+                                                                >
+                                                                    2
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    maxW={
+                                                                        "10vw"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                >
+                                                                    Total Number
+                                                                    of
+                                                                    Transactions
+                                                                    Needed
+                                                                </Text>
+                                                            </Flex>
+                                                            <Flex
+                                                                textAlign="right"
+                                                                flexDirection={
+                                                                    "column"
+                                                                }
+                                                            >
+                                                                <Text
+                                                                    fontSize={
+                                                                        26
+                                                                    }
+                                                                >
+                                                                    1 ONE + gas
+                                                                </Text>
+                                                                <Text
+                                                                    color={
+                                                                        "gray.400"
+                                                                    }
+                                                                    maxW={
+                                                                        "13vw"
+                                                                    }
+                                                                    fontSize={
+                                                                        12
+                                                                    }
+                                                                    textAlign={
+                                                                        "left"
+                                                                    }
+                                                                >
+                                                                    Approximate
+                                                                    Cost of
+                                                                    Operations
+                                                                </Text>
+                                                            </Flex>
+                                                        </HStack>
+                                                        <Text
+                                                            color={"yellow.400"}
+                                                        >
+                                                            *We charge a
+                                                            convenience fee of 1
+                                                            ONE
+                                                        </Text>
+                                                    </VStack>
+                                                </ModalBody>
+
+                                                <ModalFooter
+                                                    justifyContent={"center"}
+                                                >
+                                                    <Button
+                                                        mb={5}
+                                                        onClick={handleSend}
+                                                        disabled={
+                                                            formData
+                                                                .selectedAddresses
+                                                                ?.length !==
+                                                                formData
+                                                                    .selectedTokens
+                                                                    .length ||
+                                                            formData
+                                                                .selectedAddresses
+                                                                ?.length === 0
+                                                        }
+                                                        display={{
+                                                            base: "none",
+                                                            md: "inline-flex",
+                                                        }}
+                                                        fontSize={"sm"}
+                                                        fontWeight={600}
+                                                        color={"white"}
+                                                        bg={"pink.400"}
+                                                        href={"#"}
+                                                        _hover={{
+                                                            bg: "pink.300",
+                                                        }}
+                                                    >
+                                                        {send}
+                                                    </Button>
+                                                </ModalFooter>
+                                            </ModalContent>
+                                        </Modal>
+                                    </span>
+                                )}
+
+                            {isOneAmount && formData.rangeRawText && (
+                                <span>
                                     <Button
-                                        onClick={handleSend}
-                                        disabled={
-                                            formData.selectedAddresses
-                                                ?.length !==
-                                            formData.selectedTokens
-                                                .length ||
-                                            formData.selectedAddresses
-                                                ?.length === 0
-                                        }
+                                        onClick={onOpen}
+                                        disabled={isNaN(formData?.rangeRawText)}
                                         display={{
                                             base: "none",
                                             md: "inline-flex",
@@ -350,28 +601,44 @@ const Hrc20 = ({ }) => {
                                             bg: "pink.300",
                                         }}
                                     >
-                                        {send}
+                                        Summary
                                     </Button>
-                                )}
-                            {isOneAmount && formData.rangeRawText && (
-                                <Button
-                                    onClick={handleSend}
-                                    disabled={isNaN(formData?.rangeRawText)}
-                                    display={{
-                                        base: "none",
-                                        md: "inline-flex",
-                                    }}
-                                    fontSize={"sm"}
-                                    fontWeight={600}
-                                    color={"white"}
-                                    bg={"pink.400"}
-                                    href={"#"}
-                                    _hover={{
-                                        bg: "pink.300",
-                                    }}
-                                >
-                                    {send}
-                                </Button>
+                                    <Modal
+                                        closeOnOverlayClick={false}
+                                        isOpen={isOpen}
+                                        onClose={onClose}
+                                    >
+                                        <ModalOverlay />
+                                        <ModalContent>
+                                            <ModalHeader>Summary</ModalHeader>
+                                            <ModalCloseButton />
+                                            <ModalBody>Hmm HRC20</ModalBody>
+
+                                            <ModalFooter>
+                                                <Button
+                                                    onClick={handleSend}
+                                                    disabled={isNaN(
+                                                        formData?.rangeRawText
+                                                    )}
+                                                    display={{
+                                                        base: "none",
+                                                        md: "inline-flex",
+                                                    }}
+                                                    fontSize={"sm"}
+                                                    fontWeight={600}
+                                                    color={"white"}
+                                                    bg={"pink.400"}
+                                                    href={"#"}
+                                                    _hover={{
+                                                        bg: "pink.300",
+                                                    }}
+                                                >
+                                                    {send}
+                                                </Button>
+                                            </ModalFooter>
+                                        </ModalContent>
+                                    </Modal>
+                                </span>
                             )}
                         </>
                     )}
