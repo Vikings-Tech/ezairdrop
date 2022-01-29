@@ -11,6 +11,15 @@ import {
     Checkbox,
     Box,
     VStack,
+    HStack,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
@@ -36,7 +45,13 @@ const defaultForm = {
     selectedAddresses: [],
 };
 
-const Hrc1155 = ({ }) => {
+const Hrc1155 = ({}) => {
+    const {
+        isOpen: is1155Open,
+        onOpen: on1155Open,
+        onClose: on1155Close,
+    } = useDisclosure();
+
     const { account, balanceOf, sendErc1155Tokens, setApprovalForContract } =
         useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
@@ -47,6 +62,7 @@ const Hrc1155 = ({ }) => {
     const [isOneAmount, setIsOneAmount] = useState(false);
     const [isOneAmountValue, setIsOneAmountValue] = useState(false);
     const [send, setSend] = useState("Send Tokens");
+    const [totalTokenAmount, setTotalTokenAmount] = useState(0);
     const resetForm = () => {
         setFormData(defaultForm);
         setVerifyToken(false);
@@ -207,11 +223,20 @@ const Hrc1155 = ({ }) => {
         setLoadingVerify(false);
     };
 
+    const modalFunction = () => {
+        let totalAmount = 0;
+
+        for (let i = 0; i < formData.selectedTokens.length; i++) {
+            totalAmount += parseInt(formData.selectedAmount[i]);
+        }
+        setTotalTokenAmount(totalAmount);
+    };
+
     const ButtonDisabled =
         (!isOneAmount || !isOneAmountValue) &&
         (formData.selectedTokens.length !== formData.selectedAddresses.length ||
             formData.selectedAmount.length !==
-            formData.selectedAddresses.length ||
+                formData.selectedAddresses.length ||
             formData.selectedAmount.length !== formData.selectedTokens.length);
 
     return (
@@ -271,7 +296,9 @@ const Hrc1155 = ({ }) => {
                                 bg: "pink.300",
                             }}
                         >
-                            {verifyToken ? "Contract Approved" : "Approve Contract"}
+                            {verifyToken
+                                ? "Contract Approved"
+                                : "Approve Contract"}
                         </Button>
                         <Tooltip
                             label="To make transfers on your behalf, our contract needs to be approved first."
@@ -468,8 +495,8 @@ const Hrc1155 = ({ }) => {
                                                         .length &&
                                                     formData.selectedAmount
                                                         .length ===
-                                                    formData.selectedTokens
-                                                        .length) ||
+                                                        formData.selectedTokens
+                                                            .length) ||
                                                     (formData.selectedAddresses
                                                         ?.length ===
                                                         formData.selectedTokens
@@ -526,19 +553,21 @@ const Hrc1155 = ({ }) => {
                                         >
                                             {!isOneAmount &&
                                                 formData.selectedAmount.length >
-                                                formData.selectedAddresses
-                                                    .length &&
-                                                `You have exceeded by ${formData.selectedAmount
-                                                    .length -
-                                                formData.selectedTokens
-                                                    .length
-                                                } value${formData.selectedAmount
-                                                    .length -
+                                                    formData.selectedAddresses
+                                                        .length &&
+                                                `You have exceeded by ${
+                                                    formData.selectedAmount
+                                                        .length -
                                                     formData.selectedTokens
-                                                        .length ===
+                                                        .length
+                                                } value${
+                                                    formData.selectedAmount
+                                                        .length -
+                                                        formData.selectedTokens
+                                                            .length ===
                                                     1
-                                                    ? ""
-                                                    : "s"
+                                                        ? ""
+                                                        : "s"
                                                 } for amount`}
                                         </Text>
                                         <Text
@@ -548,19 +577,21 @@ const Hrc1155 = ({ }) => {
                                         >
                                             {!isOneAmountValue &&
                                                 formData.selectedAmount.length <
-                                                formData.selectedTokens
-                                                    .length &&
-                                                `You need atleast ${formData.selectedTokens
-                                                    .length -
-                                                formData.selectedAmount
-                                                    .length
-                                                } more value${formData.selectedTokens
-                                                    .length -
+                                                    formData.selectedTokens
+                                                        .length &&
+                                                `You need atleast ${
+                                                    formData.selectedTokens
+                                                        .length -
                                                     formData.selectedAmount
-                                                        ?.length ===
+                                                        .length
+                                                } more value${
+                                                    formData.selectedTokens
+                                                        .length -
+                                                        formData.selectedAmount
+                                                            ?.length ===
                                                     1
-                                                    ? ""
-                                                    : "s"
+                                                        ? ""
+                                                        : "s"
                                                 } for amount`}
                                         </Text>
 
@@ -573,19 +604,21 @@ const Hrc1155 = ({ }) => {
                                                 !isOneAmountValue) &&
                                                 formData.selectedAddresses
                                                     ?.length >
-                                                formData.selectedTokens
-                                                    .length &&
-                                                `You have exceeded by ${formData.selectedAddresses
-                                                    ?.length -
-                                                formData.selectedTokens
-                                                    .length
-                                                } address${formData.selectedAddresses
-                                                    ?.length -
                                                     formData.selectedTokens
-                                                        .length ===
+                                                        .length &&
+                                                `You have exceeded by ${
+                                                    formData.selectedAddresses
+                                                        ?.length -
+                                                    formData.selectedTokens
+                                                        .length
+                                                } address${
+                                                    formData.selectedAddresses
+                                                        ?.length -
+                                                        formData.selectedTokens
+                                                            .length ===
                                                     1
-                                                    ? ""
-                                                    : "es"
+                                                        ? ""
+                                                        : "es"
                                                 }`}
                                         </Text>
 
@@ -598,18 +631,20 @@ const Hrc1155 = ({ }) => {
                                                 ?.length <
                                                 formData.selectedTokens
                                                     .length &&
-                                                `You need atleast ${formData.selectedTokens
-                                                    .length -
-                                                formData.selectedAddresses
-                                                    ?.length
-                                                } more address${formData.selectedTokens
-                                                    .length -
-                                                    formData
-                                                        .selectedAddresses
-                                                        ?.length ===
+                                                `You need atleast ${
+                                                    formData.selectedTokens
+                                                        .length -
+                                                    formData.selectedAddresses
+                                                        ?.length
+                                                } more address${
+                                                    formData.selectedTokens
+                                                        .length -
+                                                        formData
+                                                            .selectedAddresses
+                                                            ?.length ===
                                                     1
-                                                    ? ""
-                                                    : "es"
+                                                        ? ""
+                                                        : "es"
                                                 }`}
                                         </Text>
                                     </span>
@@ -633,24 +668,197 @@ const Hrc1155 = ({ }) => {
                                 />
                             </VStack>
                             {formData.rawSelectedAmount && (
-                                <Button
-                                    onClick={handleSend}
-                                    display={{
-                                        base: "none",
-                                        md: "inline-flex",
-                                    }}
-                                    fontSize={"sm"}
-                                    fontWeight={600}
-                                    color={"white"}
-                                    bg={"pink.400"}
-                                    href={"#"}
-                                    _hover={{
-                                        bg: "pink.300",
-                                    }}
-                                    disabled={ButtonDisabled}
-                                >
-                                    {send}
-                                </Button>
+                                <span>
+                                    <Button
+                                        onClick={async () => {
+                                            await modalFunction();
+                                            on1155Open();
+                                        }}
+                                        display={{
+                                            base: "none",
+                                            md: "inline-flex",
+                                        }}
+                                        fontSize={"sm"}
+                                        fontWeight={600}
+                                        color={"white"}
+                                        bg={"pink.400"}
+                                        href={"#"}
+                                        _hover={{
+                                            bg: "pink.300",
+                                        }}
+                                        disabled={ButtonDisabled}
+                                    >
+                                        Summary
+                                    </Button>
+                                    <Modal
+                                        closeOnOverlayClick={false}
+                                        isOpen={is1155Open}
+                                        onClose={on1155Close}
+                                    >
+                                        <ModalOverlay />
+                                        <ModalContent>
+                                            <ModalHeader>Summary</ModalHeader>
+                                            <ModalCloseButton />
+                                            <ModalBody>
+                                                <VStack spacing={10} mb={10}>
+                                                    <HStack
+                                                        spacing={20}
+                                                        justifyContent={
+                                                            "space-between"
+                                                        }
+                                                    >
+                                                        <Flex
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={30}>
+                                                                {
+                                                                    formData
+                                                                        .selectedAddresses
+                                                                        .length
+                                                                }
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "left"
+                                                                }
+                                                                maxW={"13vw"}
+                                                            >
+                                                                Total Number of
+                                                                Addresses
+                                                            </Text>
+                                                        </Flex>
+                                                        <Flex
+                                                            textAlign="right"
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={30}>
+                                                                {
+                                                                    formData
+                                                                        .selectedTokens
+                                                                        .length
+                                                                }
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                maxW={"15vw"}
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "left"
+                                                                }
+                                                            >
+                                                                Total number of
+                                                                Token Ids
+                                                            </Text>
+                                                        </Flex>
+                                                    </HStack>
+                                                    <HStack
+                                                        spacing={5}
+                                                        justifyContent={
+                                                            "space-between"
+                                                        }
+                                                    >
+                                                        <Flex
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={26}>
+                                                                {
+                                                                    totalTokenAmount
+                                                                }
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                w={"12vw"}
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "left"
+                                                                }
+                                                            >
+                                                                Total number of
+                                                                Tokens to be
+                                                                Sent
+                                                            </Text>
+                                                        </Flex>
+                                                        <Flex
+                                                            textAlign="right"
+                                                            flexDirection={
+                                                                "column"
+                                                            }
+                                                        >
+                                                            <Text fontSize={26}>
+                                                                1 ONE + gas
+                                                            </Text>
+                                                            <Text
+                                                                color={
+                                                                    "gray.400"
+                                                                }
+                                                                maxW={"13vw"}
+                                                                fontSize={12}
+                                                                textAlign={
+                                                                    "right"
+                                                                }
+                                                            >
+                                                                Approximate Cost
+                                                                of Operations
+                                                            </Text>
+                                                        </Flex>
+                                                    </HStack>
+                                                    <Text color={"yellow.400"}>
+                                                        *We charge a convenience
+                                                        fee of 1 ONE
+                                                    </Text>
+                                                </VStack>
+                                            </ModalBody>
+
+                                            <ModalFooter
+                                                justifyContent={"center"}
+                                            >
+                                                <Button
+                                                    mb={5}
+                                                    onClick={handleSend}
+                                                    disabled={
+                                                        formData
+                                                            .selectedAddresses
+                                                            ?.length !==
+                                                            formData
+                                                                .selectedTokens
+                                                                .length ||
+                                                        formData
+                                                            .selectedAddresses
+                                                            ?.length === 0
+                                                    }
+                                                    display={{
+                                                        base: "none",
+                                                        md: "inline-flex",
+                                                    }}
+                                                    fontSize={"sm"}
+                                                    fontWeight={600}
+                                                    color={"white"}
+                                                    bg={"pink.400"}
+                                                    href={"#"}
+                                                    _hover={{
+                                                        bg: "pink.300",
+                                                    }}
+                                                >
+                                                    {send}
+                                                </Button>
+                                            </ModalFooter>
+                                        </ModalContent>
+                                    </Modal>
+                                </span>
                             )}
                         </>
                     )}

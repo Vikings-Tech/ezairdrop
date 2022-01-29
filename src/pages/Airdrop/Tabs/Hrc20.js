@@ -42,7 +42,11 @@ const defaultForm = {
 };
 
 const Hrc20 = ({}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {
+        isOpen: is20Open,
+        onOpen: on20Open,
+        onClose: on20Close,
+    } = useDisclosure();
 
     const { account, balanceOf, sendTokens } = useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
@@ -350,7 +354,7 @@ const Hrc20 = ({}) => {
                                     <span>
                                         <Button
                                             // onClick={handleSend}
-                                            onClick={onOpen}
+                                            onClick={on20Open}
                                             disabled={
                                                 formData.selectedAddresses
                                                     ?.length !==
@@ -376,8 +380,8 @@ const Hrc20 = ({}) => {
                                         </Button>
                                         <Modal
                                             closeOnOverlayClick={false}
-                                            isOpen={isOpen}
-                                            onClose={onClose}
+                                            isOpen={is20Open}
+                                            onClose={on20Close}
                                         >
                                             <ModalOverlay />
                                             <ModalContent>
@@ -587,7 +591,7 @@ const Hrc20 = ({}) => {
                             {isOneAmount && formData.rangeRawText && (
                                 <span>
                                     <Button
-                                        onClick={onOpen}
+                                        onClick={on20Open}
                                         disabled={isNaN(formData?.rangeRawText)}
                                         display={{
                                             base: "none",
@@ -606,23 +610,16 @@ const Hrc20 = ({}) => {
                                     </Button>
                                     <Modal
                                         closeOnOverlayClick={false}
-                                        isOpen={isOpen}
-                                        onClose={onClose}
+                                        isOpen={is20Open}
+                                        onClose={on20Close}
                                     >
                                         <ModalOverlay />
                                         <ModalContent>
                                             <ModalHeader>Summary</ModalHeader>
                                             <ModalCloseButton />
-                                            <ModalBody>Hmm HRC20</ModalBody>
-
-                                            <ModalFooter>
-                                                <VStack spacing={10} mb={10}>
-                                                    <HStack
-                                                        spacing={10}
-                                                        justifyContent={
-                                                            "space-between"
-                                                        }
-                                                    >
+                                            <ModalBody>
+                                                <VStack spacing={10} mb={5}>
+                                                    <HStack spacing={10}>
                                                         <Flex
                                                             flexDirection={
                                                                 "column"
@@ -722,7 +719,7 @@ const Hrc20 = ({}) => {
                                                                 maxW={"13vw"}
                                                                 fontSize={12}
                                                                 textAlign={
-                                                                    "left"
+                                                                    "right"
                                                                 }
                                                             >
                                                                 Approximate Cost
@@ -735,6 +732,32 @@ const Hrc20 = ({}) => {
                                                         fee of 1 ONE
                                                     </Text>
                                                 </VStack>
+                                            </ModalBody>
+
+                                            <ModalFooter
+                                                justifyContent={"center"}
+                                            >
+                                                <Button
+                                                    mb={5}
+                                                    onClick={handleSend}
+                                                    disabled={isNaN(
+                                                        formData?.rangeRawText
+                                                    )}
+                                                    display={{
+                                                        base: "none",
+                                                        md: "inline-flex",
+                                                    }}
+                                                    fontSize={"sm"}
+                                                    fontWeight={600}
+                                                    color={"white"}
+                                                    bg={"pink.400"}
+                                                    href={"#"}
+                                                    _hover={{
+                                                        bg: "pink.300",
+                                                    }}
+                                                >
+                                                    {send}
+                                                </Button>
                                             </ModalFooter>
                                         </ModalContent>
                                     </Modal>
