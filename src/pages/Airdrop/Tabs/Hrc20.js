@@ -176,9 +176,9 @@ const Hrc20 = ({}) => {
                 <Stack
                     textAlign={"center"}
                     align={"center"}
-                    spacing={{ base: 8, md: 10 }}
-                    py={{ base: 20, md: 28 }}
-                    px={{ base: 20, md: 28 }}
+                    spacing={{ base: 8 }}
+                    py={{ base: 12 }}
+                    px={{ base: 12 }}
                 >
                     <Text fontSize={"4xl"}>Airdrop</Text>
 
@@ -225,7 +225,7 @@ const Hrc20 = ({}) => {
                                 bg: "pink.300",
                             }}
                         >
-                            {verifyToken ? "Verified" : "Verify"}
+                            {verifyToken ? "Contract Approved" : "Approve Contract"}
                         </Button>
                         <Tooltip
                             label="To ensure the contract address is valid and sufficient balance is present"

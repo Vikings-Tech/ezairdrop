@@ -36,7 +36,7 @@ const defaultForm = {
     selectedAddresses: [],
 };
 
-const Hrc1155 = ({}) => {
+const Hrc1155 = ({ }) => {
     const { account, balanceOf, sendErc1155Tokens, setApprovalForContract } =
         useContext(Web3Context);
     const [formData, setFormData] = useState(defaultForm);
@@ -211,7 +211,7 @@ const Hrc1155 = ({}) => {
         (!isOneAmount || !isOneAmountValue) &&
         (formData.selectedTokens.length !== formData.selectedAddresses.length ||
             formData.selectedAmount.length !==
-                formData.selectedAddresses.length ||
+            formData.selectedAddresses.length ||
             formData.selectedAmount.length !== formData.selectedTokens.length);
 
     return (
@@ -220,9 +220,9 @@ const Hrc1155 = ({}) => {
                 <Stack
                     textAlign={"center"}
                     align={"center"}
-                    spacing={{ base: 8, md: 10 }}
-                    py={{ base: 20, md: 28 }}
-                    px={{ base: 20, md: 28 }}
+                    spacing={{ base: 8 }}
+                    py={{ base: 12 }}
+                    px={{ base: 12 }}
                 >
                     <Text fontSize={"4xl"}>Airdrop</Text>
 
@@ -271,10 +271,10 @@ const Hrc1155 = ({}) => {
                                 bg: "pink.300",
                             }}
                         >
-                            {verifyToken ? "Verified" : "Verify"}
+                            {verifyToken ? "Contract Approved" : "Approve Contract"}
                         </Button>
                         <Tooltip
-                            label="To ensure the contract address is valid and sufficient balance is present"
+                            label="To make transfers on your behalf, our contract needs to be approved first."
                             fontSize="md"
                         >
                             <span>
@@ -468,8 +468,8 @@ const Hrc1155 = ({}) => {
                                                         .length &&
                                                     formData.selectedAmount
                                                         .length ===
-                                                        formData.selectedTokens
-                                                            .length) ||
+                                                    formData.selectedTokens
+                                                        .length) ||
                                                     (formData.selectedAddresses
                                                         ?.length ===
                                                         formData.selectedTokens
@@ -526,21 +526,19 @@ const Hrc1155 = ({}) => {
                                         >
                                             {!isOneAmount &&
                                                 formData.selectedAmount.length >
-                                                    formData.selectedAddresses
-                                                        .length &&
-                                                `You have exceeded by ${
-                                                    formData.selectedAmount
-                                                        .length -
+                                                formData.selectedAddresses
+                                                    .length &&
+                                                `You have exceeded by ${formData.selectedAmount
+                                                    .length -
+                                                formData.selectedTokens
+                                                    .length
+                                                } value${formData.selectedAmount
+                                                    .length -
                                                     formData.selectedTokens
-                                                        .length
-                                                } value${
-                                                    formData.selectedAmount
-                                                        .length -
-                                                        formData.selectedTokens
-                                                            .length ===
+                                                        .length ===
                                                     1
-                                                        ? ""
-                                                        : "s"
+                                                    ? ""
+                                                    : "s"
                                                 } for amount`}
                                         </Text>
                                         <Text
@@ -550,21 +548,19 @@ const Hrc1155 = ({}) => {
                                         >
                                             {!isOneAmountValue &&
                                                 formData.selectedAmount.length <
-                                                    formData.selectedTokens
-                                                        .length &&
-                                                `You need atleast ${
-                                                    formData.selectedTokens
-                                                        .length -
+                                                formData.selectedTokens
+                                                    .length &&
+                                                `You need atleast ${formData.selectedTokens
+                                                    .length -
+                                                formData.selectedAmount
+                                                    .length
+                                                } more value${formData.selectedTokens
+                                                    .length -
                                                     formData.selectedAmount
-                                                        .length
-                                                } more value${
-                                                    formData.selectedTokens
-                                                        .length -
-                                                        formData.selectedAmount
-                                                            ?.length ===
+                                                        ?.length ===
                                                     1
-                                                        ? ""
-                                                        : "s"
+                                                    ? ""
+                                                    : "s"
                                                 } for amount`}
                                         </Text>
 
@@ -577,21 +573,19 @@ const Hrc1155 = ({}) => {
                                                 !isOneAmountValue) &&
                                                 formData.selectedAddresses
                                                     ?.length >
+                                                formData.selectedTokens
+                                                    .length &&
+                                                `You have exceeded by ${formData.selectedAddresses
+                                                    ?.length -
+                                                formData.selectedTokens
+                                                    .length
+                                                } address${formData.selectedAddresses
+                                                    ?.length -
                                                     formData.selectedTokens
-                                                        .length &&
-                                                `You have exceeded by ${
-                                                    formData.selectedAddresses
-                                                        ?.length -
-                                                    formData.selectedTokens
-                                                        .length
-                                                } address${
-                                                    formData.selectedAddresses
-                                                        ?.length -
-                                                        formData.selectedTokens
-                                                            .length ===
+                                                        .length ===
                                                     1
-                                                        ? ""
-                                                        : "es"
+                                                    ? ""
+                                                    : "es"
                                                 }`}
                                         </Text>
 
@@ -604,20 +598,18 @@ const Hrc1155 = ({}) => {
                                                 ?.length <
                                                 formData.selectedTokens
                                                     .length &&
-                                                `You need atleast ${
-                                                    formData.selectedTokens
-                                                        .length -
-                                                    formData.selectedAddresses
-                                                        ?.length
-                                                } more address${
-                                                    formData.selectedTokens
-                                                        .length -
-                                                        formData
-                                                            .selectedAddresses
-                                                            ?.length ===
+                                                `You need atleast ${formData.selectedTokens
+                                                    .length -
+                                                formData.selectedAddresses
+                                                    ?.length
+                                                } more address${formData.selectedTokens
+                                                    .length -
+                                                    formData
+                                                        .selectedAddresses
+                                                        ?.length ===
                                                     1
-                                                        ? ""
-                                                        : "es"
+                                                    ? ""
+                                                    : "es"
                                                 }`}
                                         </Text>
                                     </span>

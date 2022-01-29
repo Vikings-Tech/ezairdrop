@@ -318,7 +318,7 @@ export const Web3Provider = (props) => {
                 const result = await transaction.wait()
                 console.log("HERee")
             }
-            NotificationManager.success("Approval", "Approved! Fetching Tokens")
+            NotificationManager.success("Approval", "Contract Approved!")
 
             return true;
         }
@@ -338,12 +338,14 @@ export const Web3Provider = (props) => {
                 signer
             );
             const transaction = await airdropContractObject.airDrop721(address, tokens, addresses, { value: utils.parseEther("1") });
+            NotificationManager.info("Transaction", "Transaction in progress")
+
             const result = await transaction.wait()
-            NotificationManager.info("Transaction", "Transaction Successful!")
+            NotificationManager.success("Transaction", "Transaction Successful!")
             return true;
         }
         catch (e) {
-            NotificationManager.info("Transaction", "Transaction Failed, Try again!")
+            NotificationManager.error("Transaction", "Transaction Failed, Try again!")
             return false;
         }
     }
@@ -437,12 +439,14 @@ export const Web3Provider = (props) => {
                 signer
             );
             const transaction = await airdropContractObject.airDrop1155(contract, tokens, amounts, addresses, { value: utils.parseEther("1") });
+            NotificationManager.info("Transaction", "Transaction Placed")
+
             const result = await transaction.wait()
-            NotificationManager.info("Transaction", "Transaction Successful!")
+            NotificationManager.success("Transaction", "Transaction Successful!")
             return true;
         }
         catch (e) {
-            NotificationManager.info("Transaction", "Transaction Failed")
+            NotificationManager.error("Transaction", "Transaction Failed")
             console.log(e)
             return false
 
