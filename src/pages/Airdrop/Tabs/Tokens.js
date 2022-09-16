@@ -31,6 +31,7 @@ import {
   NotificationManager,
 } from "react-notifications";
 import TableNormal from "../../../components/Table/Table_20_721";
+import { useEffect } from "react";
 const defaultForm = {
   contractAddress: "",
   rangeRawText: "",
@@ -41,17 +42,23 @@ const defaultForm = {
   selectedAddresses: [],
 };
 
-const Hrc20 = ({}) => {
+const Tokens = ({}) => {
   const {
     isOpen: is20Open,
     onOpen: on20Open,
     onClose: on20Close,
   } = useDisclosure();
 
-  const { account, balanceOf, sendTokens, selectedNetwork } =
-    useContext(Web3Context);
+  const {
+    account,
+    balanceOf,
+    sendNormalTokens,
+    getBalance,
+    balance,
+    selectedNetwork,
+  } = useContext(Web3Context);
   const [formData, setFormData] = useState(defaultForm);
-  const [verifyToken, setVerifyToken] = useState();
+  const [verifyToken, setVerifyToken] = useState(true);
   const [refreshTokenLoad, setRefreshTokenLoad] = useState(false);
   const [loadingVerify, setLoadingVerify] = useState(false);
   const [successful, setSuccessful] = useState(false);
@@ -80,8 +87,7 @@ const Hrc20 = ({}) => {
         )
       );
       if (
-        await sendTokens(
-          formData.contractAddress,
+        await sendNormalTokens(
           formData.selectedAddresses?.map((e) =>
             formData?.rangeRawText.toString()
           ),
@@ -115,8 +121,7 @@ const Hrc20 = ({}) => {
     }
     setSend("Sending Tokens");
     if (
-      await sendTokens(
-        formData.contractAddress,
+      await sendNormalTokens(
         formData.selectedTokens?.map((e) => e.toString()),
         formData.selectedAddresses?.map((e) => e?.trim())
       )
@@ -152,25 +157,13 @@ const Hrc20 = ({}) => {
     setFormData(newFormData);
   };
   const handleSubmit = async () => {
-    if (!utils.isAddress(formData?.contractAddress)) {
-      NotificationManager.error(
-        "Address",
-        `Invalid Contract Address: ${(formData?.contractAddress || "")
-          .toString()
-          .slice(0, 40)}`
-      );
-      return;
-    }
-    console.log();
-    setLoadingVerify(true);
-    const balance = await balanceOf(formData.contractAddress?.trim());
-    if (balance) {
-      handleChange("availableBalance", balance);
-      setVerifyToken(true);
-    }
-
-    setLoadingVerify(false);
+    await getBalance();
   };
+  useEffect(() => {
+    if (account) {
+      getBalance();
+    }
+  }, [account]);
 
   return (
     <>
@@ -191,55 +184,17 @@ const Hrc20 = ({}) => {
             not have a contract dependency on it. Developers hold the right to
             pause all of it's functionality at any point.
           </div>
-          <Text fontSize={"2xl"}>Enter Contract Address(HRC20)</Text>
-          <Input
-            value={formData.contractAddress}
-            onChange={(e) => handleChange("contractAddress", e.target.value)}
-            placeholder="Enter Contract Address"
-            size="lg"
-            disabled={verifyToken}
-          />
-          <Flex align={"center"}>
-            {loadingVerify && (
-              <Spinner
-                mr={4}
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="pink.400"
-                size="xl"
-              />
-            )}
-            <Button
-              onClick={handleSubmit}
-              mr={2}
-              disabled={verifyToken || loadingVerify}
-              display={{ base: "none", md: "inline-flex" }}
-              fontSize={"sm"}
-              fontWeight={600}
-              color={"white"}
-              bg={"pink.400"}
-              href={"#"}
-              _hover={{
-                bg: "pink.300",
-              }}
-            >
-              {verifyToken ? "Contract Approved" : "Approve Contract"}
-            </Button>
-            <Tooltip
-              label="To ensure the contract address is valid and sufficient balance is present"
-              fontSize="md"
-            >
-              <span>
-                <FaInfoCircle />
-              </span>
-            </Tooltip>
-          </Flex>
+
           {verifyToken && (
             <>
               <Text fontSize={"2xl"}>Enter Amounts:</Text>
               <Text fontSize={"lg"}>
-                Available Balance: {formData.availableBalance}
+                Available Balance:{" "}
+                {balance
+                  ? parseFloat(
+                      parseFloat(utils.formatEther(balance)).toFixed(4)
+                    )
+                  : "Loading..."}
               </Text>
               <Button
                 onClick={async () => {
@@ -392,7 +347,7 @@ const Hrc20 = ({}) => {
                                     parseFloat(
                                       formData.totalSelectedTokens
                                     ).toFixed(4)
-                                  )}
+                                  )}{" "}
                                 </Text>
                                 <Text
                                   color={"gray.400"}
@@ -517,12 +472,8 @@ const Hrc20 = ({}) => {
                             </Flex>
                             <Flex textAlign="right" flexDirection={"column"}>
                               <Text fontSize={30}>
-                                {parseFloat(
-                                  parseFloat(
-                                    formData.totalSelectedTokens *
-                                      formData.selectedAddresses.length
-                                  ).toFixed(4)
-                                )}
+                                {formData.totalSelectedTokens *
+                                  formData.selectedAddresses.length}
                               </Text>
                               <Text
                                 color={"gray.400"}
@@ -613,4 +564,4 @@ const Hrc20 = ({}) => {
     </>
   );
 };
-export default Hrc20;
+export default Tokens;
